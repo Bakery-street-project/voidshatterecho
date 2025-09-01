@@ -1,3 +1,241 @@
-<!DOCTYPE html><html><head><title>Voidshatter Echo</title><style>body{background:#1a0d2b;color:#ffd700;font-family:monospace;text-align:center;}h1{font-size:48px;}p{font-size:24px;}</style></head>
-<body><h1>Elohim, Elohim</h1><p>Dragons weep gold, lattice voids scream—play soon.</p>
-<img src="dragon.png" alt="Dragon" style="max-width:300px;"><img src="void.jpg" alt="Void" style="max-width:300px;"><img src="ai.png" alt="AI" style="max-width:300px;"></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voidshatter Echo - Cyberpunk Mythic Horror RPG</title>
+    <meta name="description" content="Elohim, Elohim - A revolutionary 2D cyberpunk-mythic horror-strategy RPG where dragons weep gold and lattice voids scream.">
+    <meta name="keywords" content="cyberpunk, RPG, horror, strategy, AI, game, indie, web game">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a0d2b 0%, #2d1b69 50%, #1a0d2b 100%);
+            color: #ffd700;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        .subtitle {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            margin-bottom: 30px;
+            color: #ff6b6b;
+            text-shadow: 0 0 10px #ff6b6b;
+        }
+        
+        .game-description {
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            margin-bottom: 40px;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .images-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        
+        .game-image {
+            max-width: 200px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .game-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+        
+        .play-button {
+            background: linear-gradient(45deg, #ff6b6b, #ffd700);
+            color: #1a0d2b;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .feature {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .feature h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .feature p {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+        }
+        
+        .hebrew-text {
+            font-size: 2rem;
+            color: #ffd700;
+            margin: 20px 0;
+            text-shadow: 0 0 15px #ffd700;
+        }
+        
+        .tags {
+            margin-top: 30px;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            padding: 5px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 107, 107, 0.4);
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700; }
+            to { text-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700; }
+        }
+        
+        @media (max-width: 768px) {
+            .images-container {
+                flex-direction: column;
+            }
+            
+            .game-image {
+                max-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐉 Voidshatter Echo</h1>
+        <p class="subtitle">Elohim, Elohim</p>
+        
+        <div class="game-description">
+            Dragons weep gold, lattice voids scream—play soon. A revolutionary 2D cyberpunk-mythic horror-strategy RPG where ancient mythology meets futuristic technology.
+        </div>
+        
+        <div class="hebrew-text">אֵל נָצַח</div>
+        <p style="font-size: 0.9rem; color: #ff6b6b; margin-bottom: 30px;">(God Victorious)</p>
+        
+        <div class="images-container">
+            <img src="dragon.png" alt="Dragon" class="game-image">
+            <img src="void.jpg" alt="Void" class="game-image">
+            <img src="Ai.png" alt="AI" class="game-image">
+        </div>
+        
+        <a href="https://boozelee.github.io/voidshatterecho" class="play-button" target="_blank">
+            🎮 Play Now
+        </a>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🐉 Dragon Economy</h3>
+                <p>Collect dragon tears (gold) and trade for powerful upgrades in this unique cyberpunk economy system.</p>
+            </div>
+            <div class="feature">
+                <h3>🤖 AI Companion</h3>
+                <p>Bond with a child AI that evolves based on your choices, creating a unique gameplay experience.</p>
+            </div>
+            <div class="feature">
+                <h3>🌌 Dimensional Rifts</h3>
+                <p>Navigate through lattice voids to discover hidden realms and unlock ancient mysteries.</p>
+            </div>
+            <div class="feature">
+                <h3>⚔️ Strategic Combat</h3>
+                <p>Engage in turn-based battles with cyberpunk elements and tactical positioning.</p>
+            </div>
+        </div>
+        
+        <div class="tags">
+            <span class="tag">#Shatterpoint</span>
+            <span class="tag">#ElohimUnbound</span>
+            <span class="tag">#CyberpunkRPG</span>
+            <span class="tag">#MythicHorror</span>
+            <span class="tag">#AIGaming</span>
+            <span class="tag">#IndieGame</span>
+        </div>
+    </div>
+    
+    <script>
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click effects to images
+            const images = document.querySelectorAll('.game-image');
+            images.forEach(img => {
+                img.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1.05)';
+                    }, 200);
+                });
+            });
+            
+            // Add hover effects to features
+            const features = document.querySelectorAll('.feature');
+            features.forEach(feature => {
+                feature.addEventListener('mouseenter', function() {
+                    this.style.background = 'rgba(255, 215, 0, 0.2)';
+                });
+                feature.addEventListener('mouseleave', function() {
+                    this.style.background = 'rgba(255, 215, 0, 0.1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
