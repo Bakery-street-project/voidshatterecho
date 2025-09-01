@@ -1,0 +1,41 @@
+{
+  "name": "voidshatterecho",
+  "version": "1.0.0",
+  "description": "Voidshatter Echo - A cyberpunk mythic horror RPG where dragons weep gold and lattice voids scream",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "build": "echo 'No build process needed for static HTML/JS/CSS'",
+    "test": "echo 'No tests configured yet'",
+    "deploy": "gh-pages -d ."
+  },
+  "keywords": [
+    "cyberpunk",
+    "rpg",
+    "horror",
+    "strategy",
+    "ai",
+    "game",
+    "indie",
+    "web-game",
+    "javascript",
+    "html5"
+  ],
+  "author": "Bakery Street Project",
+  "license": "MIT",
+  "homepage": "https://bakery-street-projct.github.io/voidshatterecho",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bakery-street-projct/voidshatterecho.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bakery-street-projct/voidshatterecho/issues"
+  },
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

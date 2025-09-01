@@ -1,0 +1,238 @@
+/* Voidshatter Echo - Game Styles */
+
+.game-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.game-header h2 {
+    color: #ffd700;
+    text-shadow: 0 0 20px #ffd700;
+    margin-bottom: 10px;
+}
+
+.hebrew-text {
+    font-size: 2rem;
+    color: #ffd700;
+    text-shadow: 0 0 15px #ffd700;
+    margin: 10px 0;
+}
+
+.game-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-label {
+    font-weight: bold;
+    color: #ffd700;
+    font-size: 0.9rem;
+}
+
+.stat-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.stat-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #ffd700);
+    transition: width 0.3s ease;
+    border-radius: 10px;
+}
+
+.stat-value {
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.ai-status {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.ai-status h3 {
+    color: #ff6b6b;
+    margin-bottom: 10px;
+}
+
+.ai-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.ai-info div {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+}
+
+.location {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.location h3 {
+    color: #ffd700;
+    margin-bottom: 10px;
+}
+
+.location p {
+    color: #ff6b6b;
+    line-height: 1.6;
+}
+
+.actions {
+    margin-bottom: 20px;
+}
+
+.actions h4 {
+    color: #ffd700;
+    margin-bottom: 10px;
+}
+
+.game-action {
+    background: linear-gradient(45deg, #ff6b6b, #ffd700);
+    color: #1a0d2b;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.game-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+.game-action:active {
+    transform: translateY(0);
+}
+
+.events {
+    margin-bottom: 20px;
+}
+
+.events h4 {
+    color: #ffd700;
+    margin-bottom: 10px;
+}
+
+.event-log {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.event {
+    color: #ff6b6b;
+    margin-bottom: 5px;
+    padding: 5px;
+    border-left: 3px solid #ffd700;
+    padding-left: 10px;
+    font-size: 0.9rem;
+}
+
+.controls {
+    text-align: center;
+    padding: 15px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.controls p {
+    color: #ff6b6b;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .game-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .ai-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .game-action {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+/* Game container specific styles */
+#game-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Animation for stat changes */
+@keyframes statChange {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.stat-changing {
+    animation: statChange 0.5s ease;
+}
+
+/* Glow effect for important elements */
+.glow {
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700; }
+    to { text-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700; }
+}
+
+/* Victory state */
+.victory {
+    background: linear-gradient(135deg, #ffd700, #ff6b6b);
+    color: #1a0d2b;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    animation: victoryGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes victoryGlow {
+    from { box-shadow: 0 0 20px #ffd700; }
+    to { box-shadow: 0 0 40px #ffd700, 0 0 60px #ff6b6b; }
+}

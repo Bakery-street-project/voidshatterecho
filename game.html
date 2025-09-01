@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voidshatter Echo - Play the Game</title>
+    <meta name="description" content="Play Voidshatter Echo - A cyberpunk mythic horror RPG where dragons weep gold and lattice voids scream.">
+    <link rel="stylesheet" href="css/game.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a0d2b 0%, #2d1b69 50%, #1a0d2b 100%);
+            color: #ffd700;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .game-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #ffd700;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid #ffd700;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            background: #ffd700;
+            color: #1a0d2b;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-wrapper">
+        <a href="index.html" class="back-link">← Back to Main</a>
+        <div id="game-container">
+            <!-- Game will be rendered here by JavaScript -->
+        </div>
+    </div>
+    
+    <script src="js/game.js"></script>
+</body>
+</html>
