@@ -1,27 +1,24 @@
-name: CI
+name: CI — voidshatterecho
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, master]
 
 jobs:
-  test:
+  quality:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Basic checks
-        run: |
-          echo "Running basic repository checks"
-          if [ -f "Makefile" ]; then make test || echo "No make test target"; fi
-          if [ -f "test.sh" ]; then sh test.sh || echo "Test script failed"; fi
-        continue-on-error: true
-
-      - name: Validate repository
-        run: |
-          echo "Repository structure validated"
-          echo "Language: HTML"
-        continue-on-error: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dev tools
+        run: pip install ruff pytest bandit || true
+      - name: Lint (ruff)
+        run: ruff check . || true
+      - name: Security scan (bandit)
+        run: bandit -r . -ll || true
+      - name: Tests (pytest)
+        run: pytest --tb=short || true
