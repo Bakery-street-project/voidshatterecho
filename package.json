@@ -33,7 +33,7 @@
     "url": "https://github.com/Bakery-street-projct/voidshatterecho/issues"
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0"
+    "gh-pages": "^6.3.0"
   },
   "engines": {
     "node": ">=14.0.0"
