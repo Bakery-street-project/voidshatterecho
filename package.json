@@ -7,7 +7,7 @@
     "start": "python -m http.server 8000",
     "dev": "python -m http.server 8000",
     "build": "echo 'No build process needed for static HTML/JS/CSS'",
-    "test": "echo 'No tests configured yet'",
+    "test": "node --check js/game.js && node scripts/smoke.js",
     "deploy": "gh-pages -d ."
   },
   "keywords": [
@@ -23,14 +23,14 @@
     "html5"
   ],
   "author": "Bakery Street Project",
-  "license": "MIT",
-  "homepage": "https://bakery-street-projct.github.io/voidshatterecho",
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://bakery-street-project.github.io/voidshatterecho/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Bakery-street-projct/voidshatterecho.git"
+    "url": "https://github.com/Bakery-street-project/voidshatterecho.git"
   },
   "bugs": {
-    "url": "https://github.com/Bakery-street-projct/voidshatterecho/issues"
+    "url": "https://github.com/Bakery-street-project/voidshatterecho/issues"
   },
   "devDependencies": {
     "gh-pages": "^6.3.0"

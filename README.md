@@ -1,46 +1,70 @@
-# voidshatterecho
+# Voidshatter Echo
 
-Project voidshatterecho
+Cyberpunk mythic-horror RPG: dragons weep gold, lattice voids scream, and a Child AI decides whether you leave.
 
-## Vision
+**Play:** [bakery-street-project.github.io/voidshatterecho](https://bakery-street-project.github.io/voidshatterecho/)
 
-To be defined
+## About
 
-## Features
+You are the Elohim Seeker. Cross one gated zone path, bind the Child AI, and open the Elohim Chamber before divine fire ends the run.
 
-- Developed in **HTML**
-- Well-structured and maintainable codebase
-- Integration ready for development workflows
-- Comprehensive documentation
-- Core functionality includes development tools, integration capabilities, and automation features.
+- **Loop:** travel → actions → fail/win → restart
+- **Fail:** health **or** sanity hits 0
+- **Win:** chamber checklist — face a dragon, repair the lattice, AI bond ≥ 70, hold **Dragon Tear** + **Lattice Shard**
+- **Save:** full run state in `localStorage` (`voidshatterecho_save_v1`), autosave each action
 
-## Quick Start
+## How to play
 
-### Prerequisites
-- Web browser
-- Local web server (optional)
+1. Open `game.html` (or the live Pages URL).
+2. At **Void Entrance**, use **Discover Secrets** for the **Void Key**.
+3. Go **East** to the **Dragon Realm** — battle or collect tears; get the **Dragon Tear**.
+4. With the key, go **East** to the **Lattice Void** — raise gold, **Repair Lattice** for the **Lattice Shard**.
+5. Bond the AI to **70+** (talk, upgrade).
+6. Enter the **Elohim Chamber** and **Claim Victory**.
 
-### Installation
+### Controls
+
+| Input | Action |
+| --- | --- |
+| WASD / Arrows | Travel (gated exits) |
+| Enter | Talk to Child AI |
+| K | Manual save |
+| Space | Interact prompt |
+| Buttons | Actions, travel, restart |
+
+## Local run
+
 ```bash
-git clone https://github.com/bakery-street-project/voidshatterecho.cd voidshatterecho
+git clone https://github.com/Bakery-street-project/voidshatterecho.git
 cd voidshatterecho
-# See specific setup instructions for this project type
+npm start
+# open http://localhost:8000/game.html
 ```
 
-### Usage
+Static HTML/JS/CSS only — no build step.
+
+## Smoke test
+
 ```bash
-# Follow project-specific usage instructions
-# See documentation files or examples
+npm test
 ```
+
+Runs `node --check` on the engine and asserts required DOM/action hooks.
+
+## Out of scope (v1)
+
+NFT market, weekly multiplayer, full nine-faction campaign, desktop wrapper.
+
+Lore cousins live in the org’s Elohim Shards materials; this repo ships the finishable web loop only.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to this project.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Proprietary — see [LICENSE](LICENSE). `package.json` references the same file; do not assume MIT.
 
 ## Security
 
-See [SECURITY.md](SECURITY.md) for security policy information.
+See [SECURITY.md](SECURITY.md).
