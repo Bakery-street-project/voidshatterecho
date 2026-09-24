@@ -57,6 +57,11 @@ NFT market, weekly multiplayer, full nine-faction campaign, desktop wrapper.
 
 Lore cousins live in the org’s Elohim Shards materials; this repo ships the finishable web loop only.
 
+## Roadmap
+
+Full idea → playable product plan (frontend, backend, content, art, QA, live ops):  
+**[docs/ROADMAP.md](docs/ROADMAP.md)**
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
