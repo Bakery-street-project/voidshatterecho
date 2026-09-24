@@ -100,6 +100,20 @@ function renderChecklist(state, winGate) {
   </div>`;
 }
 
+function renderControls(state, paused) {
+  const confirm = Boolean(state.__confirmNewRun);
+  return `<div class="controls">
+      <p><strong>Controls:</strong> WASD/arrows travel · Enter talk to AI · K save · Space interact · P pause</p>
+      <div class="control-buttons">
+        <button class="game-action secondary" data-pause type="button" aria-pressed="${paused ? "true" : "false"}">${paused ? "Resume" : "Pause"}</button>
+        <button class="game-action secondary" data-export-save type="button">Export Save</button>
+        <button class="game-action secondary" data-import-save type="button">Import Save</button>
+        <button class="game-action secondary${confirm ? " confirm" : ""}" data-new-game type="button">${confirm ? "Confirm New Run?" : "New Run"}</button>
+      </div>
+      ${confirm ? `<p class="confirm-hint">Click Confirm New Run again to wipe this run (or Pause and Export first).</p>` : ""}
+    </div>`;
+}
+
 function renderEndScreen(state) {
   const phase = state.game.phase;
   if (phase === PHASES.GAME_OVER) {
@@ -122,9 +136,10 @@ function renderEndScreen(state) {
   return "";
 }
 
-export function renderGame(container, state, content) {
+export function renderGame(container, state, content, shell = {}) {
   if (!container) return;
-  const { zones, items, dialogue, travelLabels, winGate, balance } = content;
+  const { zones, items, dialogue, travelLabels, winGate } = content;
+  const paused = Boolean(shell.paused);
 
   if (state.game.phase === PHASES.GAME_OVER || state.game.phase === PHASES.VICTORY) {
     container.innerHTML = `
@@ -147,8 +162,9 @@ export function renderGame(container, state, content) {
     <div class="game-header">
       <h2>🐉 Voidshatter Echo</h2>
       <div class="hebrew-text">אֵל נָצַח</div>
-      <div class="save-meta">t=${state.game.time}s · seed=${state.game.seed} · autosave on · K=save</div>
+      <div class="save-meta">t=${state.game.time}s · seed=${state.game.seed} · autosave on · K=save${paused ? " · paused" : ""}</div>
     </div>
+    ${paused ? `<div class="pause-banner" role="status">Paused — clock stopped. Resume when ready.</div>` : ""}
 
     <div class="game-stats">
       <div class="stat">
@@ -231,16 +247,13 @@ export function renderGame(container, state, content) {
 
     ${showChecklist ? renderChecklist(state, winGate) : ""}
 
-    <div class="events">
+    <div class="events" aria-live="polite">
       <h4>Recent Events:</h4>
       <div class="event-log">
         ${state.game.events.map((event) => `<div class="event">${event.message}</div>`).join("")}
       </div>
     </div>
 
-    <div class="controls">
-      <p><strong>Controls:</strong> WASD/arrows travel · Enter talk to AI · K save · Space interact</p>
-      <button class="game-action secondary" data-new-game type="button">New Run</button>
-    </div>
+    ${renderControls(state, paused)}
   `;
 }

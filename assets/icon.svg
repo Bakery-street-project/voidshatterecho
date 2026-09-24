@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Voidshatter Echo">
+  <rect width="64" height="64" rx="12" fill="#1a0d2b"/>
+  <path d="M12 40 L24 18 L32 34 L40 18 L52 40" fill="none" stroke="#ffd700" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="32" cy="46" r="4" fill="#ff6b6b"/>
+</svg>

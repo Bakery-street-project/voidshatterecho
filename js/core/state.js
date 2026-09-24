@@ -103,6 +103,7 @@ export function cloneState(state) {
       consumed: { ...(state.game.consumed || {}) },
     },
     meta: { ...state.meta },
+    ...(state.__confirmNewRun ? { __confirmNewRun: true } : {}),
   };
 }
 

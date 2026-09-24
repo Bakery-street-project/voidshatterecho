@@ -12,6 +12,14 @@ import { parseSave, serializeState, SAVE_VERSION } from "../js/core/save.js";
 import { mulberry32, randomInt, chance, pick, statelessRng, hashParts } from "../js/core/rng.js";
 import { deriveMood, pickAiLine, remember, lastMemory } from "../js/core/ai.js";
 import { onZoneArrive, onZoneTick } from "../js/core/beats.js";
+import {
+  ANALYTICS_KEY,
+  appendEvent,
+  deathCause,
+  runEnd,
+  runStart,
+  saveLoad,
+} from "../js/core/analytics.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (p) => JSON.parse(readFileSync(join(root, p), "utf8"));
@@ -346,4 +354,51 @@ test("onZoneTick can emit ambient beat deterministically", () => {
   }
   assert.ok(fired, "expected at least one tick beat in 50 rolls");
   assert.ok(content.zones.lattice_void.ambientBeats.includes(fired.game.events[0].message));
+});
+
+test("analytics run_end and run_start are privacy-light", () => {
+  const s = createDefaultState(content.balance);
+  s.player.location = "lattice_void";
+  s.player.level = 3;
+  s.player.health = 0;
+  s.ai.bond = 70;
+  s.game.time = 120;
+
+  const start = runStart(s);
+  assert.equal(start.name, "run_start");
+  assert.equal(typeof start.seed, "number");
+
+  const fail = runEnd(s, "fail");
+  assert.equal(fail.name, "run_end");
+  assert.equal(fail.outcome, "fail");
+  assert.equal(fail.death_cause, "health");
+  assert.equal(fail.zone, "lattice_void");
+  assert.equal(fail.time, 120);
+  assert.equal(fail.level, 3);
+  assert.ok(!("email" in fail) && !("ip" in fail));
+
+  const win = runEnd(s, "win");
+  assert.equal(win.outcome, "win");
+  assert.equal(win.death_cause, undefined);
+
+  const save = saveLoad(s, "import");
+  assert.equal(save.name, "save_load");
+  assert.equal(save.mode, "import");
+
+  assert.equal(deathCause({ ...s, player: { ...s.player, health: 10, sanity: 0 } }), "sanity");
+
+  const buf = appendEvent([], start);
+  const buf2 = appendEvent(buf, fail);
+  assert.equal(buf2[0].name, "run_end");
+  assert.equal(buf2.length, 2);
+  assert.equal(appendEvent([], start, 1).length, 1);
+  assert.ok(ANALYTICS_KEY.includes("voidshatterecho"));
+});
+
+test("serialize drops confirm flag; parse rejects wrong version", () => {
+  let s = createDefaultState(content.balance);
+  s.__confirmNewRun = true;
+  const payload = serializeState(s);
+  assert.equal(payload.__confirmNewRun, undefined);
+  assert.equal(parseSave(JSON.stringify(payload), () => createDefaultState(content.balance)) !== null, true);
 });

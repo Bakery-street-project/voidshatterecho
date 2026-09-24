@@ -16,6 +16,13 @@ import { travel } from "./core/travel.js";
 import { SAVE_KEY, parseSave, serializeState } from "./core/save.js";
 import { defaultRng, mulberry32, statelessRng } from "./core/rng.js";
 import { onZoneArrive, onZoneTick } from "./core/beats.js";
+import {
+  ANALYTICS_KEY,
+  appendEvent,
+  runEnd,
+  runStart,
+  saveLoad,
+} from "./core/analytics.js";
 import { renderGame } from "./ui/render.js";
 
 class VoidshatterEcho {
@@ -23,6 +30,7 @@ class VoidshatterEcho {
     this.content = content;
     this.rng = defaultRng();
     this.loopTimer = null;
+    this.paused = false;
     this.gameState = createDefaultState(content.balance);
     this.ctx = {
       balance: content.balance,
@@ -32,14 +40,18 @@ class VoidshatterEcho {
       items: content.items,
       rng: this.rng,
     };
+    this.runEnded = false;
     this.init();
   }
 
   init() {
     this.setupEventListeners();
-    if (!this.tryLoadGame()) {
+    if (this.tryLoadGame()) {
+      this.track(saveLoad(this.gameState, "restore"));
+    } else {
       this.applyArrivalBeats();
       this.addEvent("You arrive at the Void Entrance. The lattice hums eastward.");
+      this.track(runStart(this.gameState));
     }
     this.render();
     this.startGameLoop();
@@ -85,7 +97,7 @@ class VoidshatterEcho {
   setupEventListeners() {
     document.addEventListener("click", (e) => {
       const el = e.target.closest(
-        "[data-action],[data-travel],[data-new-game],[data-load-game]"
+        "[data-action],[data-travel],[data-new-game],[data-load-game],[data-pause],[data-export-save],[data-import-save]"
       );
       if (!el) return;
       if (el.dataset.action) {
@@ -96,8 +108,20 @@ class VoidshatterEcho {
         this.travel(el.dataset.travel);
         return;
       }
+      if (el.hasAttribute("data-pause")) {
+        this.togglePause();
+        return;
+      }
+      if (el.hasAttribute("data-export-save")) {
+        this.exportSave();
+        return;
+      }
+      if (el.hasAttribute("data-import-save")) {
+        this.importSave();
+        return;
+      }
       if (el.hasAttribute("data-new-game")) {
-        this.restartRun();
+        this.requestRestart();
         return;
       }
       if (el.hasAttribute("data-load-game")) {
@@ -110,6 +134,12 @@ class VoidshatterEcho {
       if (e.target && ["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName)) {
         return;
       }
+      if (e.key === "p" || e.key === "P") {
+        if (this.gameState.game.phase === PHASES.PLAYING) {
+          this.togglePause();
+        }
+        return;
+      }
       if (this.gameState.game.phase !== PHASES.PLAYING) {
         if (e.key === "Enter" || e.key === " ") {
           if (
@@ -117,9 +147,13 @@ class VoidshatterEcho {
             this.gameState.game.phase === PHASES.VICTORY
           ) {
             e.preventDefault();
-            this.restartRun();
+            this.requestRestart();
           }
         }
+        return;
+      }
+      if (this.paused && e.key !== "p" && e.key !== "P") {
+        if (e.key === "Escape") this.togglePause();
         return;
       }
 
@@ -165,6 +199,8 @@ class VoidshatterEcho {
     if (this.loopTimer) clearInterval(this.loopTimer);
     const ms = (this.content.balance.tickSeconds ?? 1) * 1000;
     this.loopTimer = setInterval(() => {
+      if (this.paused) return;
+      const prevPhase = this.gameState.game.phase;
       this.gameState = tick(this.gameState, {
         balance: this.content.balance,
         rng: this.rng,
@@ -179,34 +215,133 @@ class VoidshatterEcho {
         this.warnAiThresholds();
         this.saveGame(false);
       }
+      this.maybeTrackRunEnd(prevPhase);
       this.render();
     }, ms);
   }
 
+  maybeTrackRunEnd(prevPhase) {
+    if (this.runEnded) return;
+    const phase = this.gameState.game.phase;
+    if (phase === prevPhase) return;
+    if (phase === PHASES.GAME_OVER) {
+      this.runEnded = true;
+      this.track(runEnd(this.gameState, "fail"));
+    } else if (phase === PHASES.VICTORY) {
+      this.runEnded = true;
+      this.track(runEnd(this.gameState, "win"));
+    }
+  }
+
+  track(event) {
+    try {
+      const raw = localStorage.getItem(ANALYTICS_KEY);
+      const buf = raw ? JSON.parse(raw) : [];
+      localStorage.setItem(ANALYTICS_KEY, JSON.stringify(appendEvent(buf, event)));
+    } catch {
+      /* analytics must never break play */
+    }
+  }
+
+  showToast(message) {
+    const el = document.getElementById("vse-toast");
+    if (!el) return;
+    el.textContent = message;
+    el.hidden = false;
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => {
+      el.hidden = true;
+    }, 1600);
+  }
+
+  togglePause() {
+    this.paused = !this.paused;
+    this.addEvent(this.paused ? "Run paused." : "Run resumed.");
+    this.render();
+  }
+
+  requestRestart() {
+    if (this.gameState.game.phase !== PHASES.PLAYING) {
+      this.restartRun();
+      return;
+    }
+    if (this.gameState.__confirmNewRun) {
+      this.restartRun();
+      return;
+    }
+    this.gameState = { ...this.gameState, __confirmNewRun: true };
+    this.addEvent("Confirm New Run to wipe this browser save.");
+    this.render();
+  }
+
+  exportSave() {
+    try {
+      const payload = serializeState(this.gameState);
+      const text = JSON.stringify(payload);
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+      window.prompt("Export save (copy OK):", text);
+      this.showToast("Save exported");
+    } catch {
+      this.addEvent("Export failed.");
+      this.render();
+    }
+  }
+
+  importSave() {
+    const text = window.prompt("Paste a Voidshatter Echo save JSON:");
+    if (!text) return;
+    const data = parseSave(text, () => createDefaultState(this.content.balance));
+    if (!data) {
+      this.addEvent("Import failed: not a valid v1 save.");
+      this.render();
+      this.showToast("Import failed");
+      return;
+    }
+    this.gameState = data;
+    this.runEnded = false;
+    this.paused = false;
+    this.saveGame(false);
+    this.track(saveLoad(this.gameState, "import"));
+    this.addEvent("Save imported.");
+    this.render();
+    this.showToast("Save imported");
+  }
+
   performAction(action) {
+    if (this.paused) return;
     if (this.gameState.game.phase !== PHASES.PLAYING) return;
     if (!KNOWN_ACTIONS.includes(action)) {
       this.addEvent(`Unknown action: ${action}`);
       this.render();
       return;
     }
+    const prevPhase = this.gameState.game.phase;
     this.gameState = performAction(this.gameState, action, this.ctx);
+    this.gameState = { ...this.gameState, __confirmNewRun: false };
     this.saveGame(false);
+    this.showToast("Autosaved");
+    this.maybeTrackRunEnd(prevPhase);
     this.render();
   }
 
   travel(direction) {
+    if (this.paused) return;
+    const prevPhase = this.gameState.game.phase;
     const result = travel(
       this.gameState,
       this.content.zones,
       direction,
       this.content.winGate
     );
-    this.gameState = result.state;
+    this.gameState = { ...result.state, __confirmNewRun: false };
     if (result.moved) {
       this.applyArrivalBeats();
       this.saveGame(false);
+      this.showToast("Autosaved");
     }
+    this.maybeTrackRunEnd(prevPhase);
     this.render();
   }
 
@@ -225,8 +360,11 @@ class VoidshatterEcho {
     this.rng = mulberry32(this.gameState.game.seed);
     this.ctx.rng = this.rng;
     this.clearSave();
+    this.runEnded = false;
+    this.paused = false;
     this.applyArrivalBeats();
     this.addEvent("A new run begins at the Void Entrance.");
+    this.track(runStart(this.gameState));
     this.render();
   }
 
@@ -237,6 +375,7 @@ class VoidshatterEcho {
       this.gameState.meta.savedAt = payload.savedAt;
       if (explicit) {
         this.addEvent("Game saved to this browser.");
+        this.showToast("Saved");
         this.render();
       }
       return true;
@@ -282,12 +421,16 @@ class VoidshatterEcho {
       return;
     }
     this.gameState = data;
+    this.runEnded = false;
+    this.track(saveLoad(this.gameState, "manual"));
     this.addEvent("Save loaded.");
     this.render();
   }
 
   render() {
-    renderGame(document.getElementById("game-container"), this.gameState, this.content);
+    renderGame(document.getElementById("game-container"), this.gameState, this.content, {
+      paused: this.paused,
+    });
   }
 }
 

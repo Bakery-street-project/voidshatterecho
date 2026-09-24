@@ -1,6 +1,6 @@
 # Voidshatter Echo — Idea → Playable Product Roadmap
 
-**Status date:** 2026-09-24  
+**Status date:** 2026-09-24 (updated same day: Phase 0 docs/templates + Phase 2 analytics/UX/E2E/local)  
 **Live v1:** https://bakery-street-project.github.io/voidshatterecho/  
 **Repo:** `Bakery-street-project/voidshatterecho` · default branch `main`  
 **Engine today:** static HTML/JS/CSS, ~936 LOC `js/game.js`, no build step  
@@ -58,6 +58,17 @@ This is the single plan from **idea → shipped, maintainable video game**, cove
 - [x] Studio skill: `~/.claude/skills/ai-game-studio/SKILL.md`
 - [x] `npm test` → 23 unit + smoke green
 
+### 1.1d Done — Phase 0 docs + Phase 2 productize slice (2026-09-24)
+
+- [x] `docs/PLAYTEST.md` 15-min path · `docs/DESIGN.md` zone map + win funnel
+- [x] Issue templates: balance, crash, save corrupt
+- [x] Privacy-light analytics: `js/core/analytics.js` + ring `voidshatterecho_analytics_v1`
+- [x] Landing/game: OG tags, favicon, manifest, theme-color, CSS tokens, focus/reduced-motion
+- [x] In-game UX: pause, confirm New Run, export/import save, autosave toast, aria-live events
+- [x] Playwright E2E `e2e/run.mjs` (`npm run test:e2e`) — boot/key/travel/save/pause/fail/restart/analytics
+- [x] HN draft `docs/launch/hn.md` (not submitted)
+- [x] README NFT backlog note; `npm test` 25 unit + smoke + e2e green
+
 ### 1.2 Baseline metrics
 
 | Signal | Value |
@@ -74,8 +85,8 @@ This is the single plan from **idea → shipped, maintainable video game**, cove
 | --- | --- | --- | --- |
 | B1 | GitHub Actions **billing lock** | Fix billing on the org/account that owns Actions minutes | Smoke CI, CodeQL, future deploy jobs |
 | B2 | Proprietary LICENSE vs public Pages | Choose: (a) keep proprietary + “source available, no commercial use”, (b) switch game to MIT/CC, (c) keep code public but add clear “all rights reserved” + contact | Marketing, PRs, factory contributions |
-| B3 | No telemetry | Add privacy-light play events (Phase 2) | Balance, funnel, retention |
-| B4 | Single-file engine | Extract modules before content explosion (Phase 3) | Testability, multi-zone, backend |
+| B3 | No telemetry | **Mitigated:** local privacy-light ring `voidshatterecho_analytics_v1`; dashboard/batch later | Balance, funnel, retention |
+| B4 | Single-file engine | **Done:** pure modules + content JSON | Testability, multi-zone, backend |
 
 ---
 
@@ -118,8 +129,8 @@ Phase 8  Ship, market, live ████████████  (continuous fr
    - Keep `ubuntu-latest`; pin Node 20.
    - Map branch protection contexts to real check names (`security-scan` / `code-quality` must be provided by real jobs or replaced — today they are aspirational names).
 3. **License decision (B2):** write final `LICENSE` + README badge; if staying proprietary, add `CONTRIBUTING` “patches by invitation” line so Issues don’t imply OSS.
-4. **Playtest script:** 15-minute manual path documented in `docs/PLAYTEST.md` (exact click order for key → dragon → lattice → bond → chamber).
-5. **Hotfix channel:** GitHub Issue templates → “balance”, “crash”, “save corrupt”.
+4. **Playtest script:** 15-minute manual path documented in `docs/PLAYTEST.md` (exact click order for key → dragon → lattice → bond → chamber). **Script written 2026-09-24; external run still open.**
+5. **Hotfix channel:** GitHub Issue templates → “balance”, “crash”, “save corrupt”. **Done 2026-09-24.**
 6. **Org links:** add game link to org profile README / `.github` community README.
 
 ### Exit criteria
@@ -128,6 +139,8 @@ Phase 8  Ship, market, live ████████████  (continuous fr
 - [ ] Actions billing fixed **or** documented waiver + local pre-push hook runs `npm test`.
 - [ ] License text matches how you want strangers to use the source.
 - [ ] One external playtester completes a run (win or fair fail).
+- [x] `docs/PLAYTEST.md` 15-min path written.
+- [x] Issue templates: balance / crash / save corrupt.
 
 ---
 
@@ -148,11 +161,11 @@ Phase 8  Ship, market, live ████████████  (continuous fr
 
 ### 4.2 Implement
 
-- [ ] Seeded RNG helper for reproducible tests.
-- [ ] Dialogue/encounter tables externalized to `content/v1/*.json` loaded by fetch (still static).
+- [x] Seeded RNG helper for reproducible tests.
+- [x] Dialogue/encounter tables externalized to `content/v1/*.json` loaded by fetch (still static).
 - [ ] Balance pass: median run 8–12 min; win rate target 35–50% after first loss.
 - [ ] Save schema `version: 2` migration if flags grow.
-- [ ] `docs/DESIGN.md` — zone map ASCII + win funnel.
+- [x] `docs/DESIGN.md` — zone map ASCII + win funnel.
 
 ### 4.3 Jev (engineering gates)
 
@@ -180,18 +193,19 @@ Persist requests/responses under `docs/jev/`.
 
 | Piece | Spec |
 | --- | --- |
-| Landing | Title, GIF/loop, Play, controls, credits, license, “report bug” |
-| In-game UX | HP/sanity always visible; checklist persistent; inventory tooltips; toast for autosave |
-| Feedback | Pause; confirm New Run; export/import save string (share backup) |
-| a11y | Keyboard-only path; focus rings; reduced-motion; aria-live for events |
-| Perf | Lazy images; no framework; total JS budget &lt; 150 KB gz for game shell |
-| Meta | OG tags, favicon, `manifest.webmanifest`, theme-color |
+| Landing | Title, GIF/loop, Play, controls, credits, license, “report bug” | controls + report bug done |
+| In-game UX | HP/sanity always visible; checklist persistent; inventory tooltips; toast for autosave | toast done |
+| Feedback | Pause; confirm New Run; export/import save string (share backup) | done |
+| a11y | Keyboard-only path; focus rings; reduced-motion; aria-live for events | tokens + aria done |
+| Perf | Lazy images; no framework; total JS budget &lt; 150 KB gz for game shell | |
+| Meta | OG tags, favicon, `manifest.webmanifest`, theme-color | done |
 
 ### Analytics (privacy-light)
 
 - Events: `run_start`, `run_end{win|fail, zone, time, level}`, `save_load`, `death_cause`, `tutorial_step`.
 - Tooling options (pick one): Plausible / GoatCounter / self-host later.
 - **No PII** until Phase 4 accounts.
+- **Implemented (2026-09-24):** pure builders in `js/core/analytics.js`; localStorage ring `voidshatterecho_analytics_v1` (raw feed). Wire batch endpoint later.
 
 ### QA harness
 
@@ -199,14 +213,14 @@ Persist requests/responses under `docs/jev/`.
 | --- | --- | --- |
 | Unit | Node test runner on pure logic (gates, inventory, RNG) | Phase 2–3 |
 | DOM smoke | keep `scripts/smoke.js` | now |
-| Browser E2E | Playwright: boot, discover key, travel, fail, restart, save roundtrip | Phase 2 |
+| Browser E2E | Playwright: boot, discover key, travel, fail, restart, save roundtrip | **local:** `npm run test:e2e` |
 | Visual | Screenshot smoke of end screens | Phase 3 |
 
 ### Exit criteria
 
-- [ ] E2E green in CI (after billing fix).
+- [ ] E2E green in CI (after billing fix) — **local `npm run test:e2e` green 2026-09-24**.
 - [ ] ≥100 runs of analytics with `run_end` breakdown.
-- [ ] Landing + game share one design system (CSS tokens).
+- [x] Landing + game share one design system (CSS tokens).
 
 ---
 
@@ -559,12 +573,12 @@ Backend additions: replay storage, authoritative weekly seed, rate limits, econo
 | --- | --- | --- | --- |
 | 1 | Fix GitHub Actions billing; re-run Smoke to green | 0 | Check green on `main` |
 | 2 | Resolve LICENSE vs public URL (B2) | 0 | LICENSE + README consistent |
-| 3 | External 15-min playtest + write `docs/PLAYTEST.md` notes | 0 | One stranger finishes a run |
+| 3 | External 15-min playtest + write `docs/PLAYTEST.md` notes | 0 | Script written; still need one stranger run |
 | 4 | Link game from org README | 0 | Clickable from org profile |
 | 5 | Extract `victory` + `save` into pure modules with unit tests | 3 early | `npm test` covers gates |
 | 6 | Move dialogue/encounters to `content/v1/*.json` | 1 | No balance numbers hard-coded only |
-| 7 | Add privacy-light `run_end` analytics | 2 | Dashboard or raw feed shows events |
-| 8 | Playwright: save roundtrip + fail screen | 2 | CI job (post-billing) |
+| 7 | Add privacy-light `run_end` analytics | 2 | Local ring `voidshatterecho_analytics_v1` shows events |
+| 8 | Playwright: save roundtrip + fail screen | 2 | `npm run test:e2e` green locally (CI post-billing) |
 | 9 | Draft HN “Show HN” post (don’t submit yet) | 8 | Stored in `docs/launch/hn.md` |
 | 10 | Backlog grooming: mark Phase 7 NFT as out-of-scope until M5 | all | README + issues clean |
 

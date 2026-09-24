@@ -57,15 +57,26 @@ const requiredContent = [
   "js/core/rng.js",
   "js/core/ai.js",
   "js/core/beats.js",
+  "js/core/analytics.js",
   "js/content/loader.js",
   "js/ui/render.js",
   "js/game.js",
+  "css/tokens.css",
+  "css/game.css",
+  "manifest.webmanifest",
+  "assets/icon.svg",
   "assets/hero.jpg",
   "assets/portraits/child-ai.webp",
   "assets/zones/void-entrance.webp",
   "assets/zones/dragon-realm.webp",
   "assets/zones/lattice-void.webp",
   "assets/zones/elohim-chamber.webp",
+  "docs/PLAYTEST.md",
+  "docs/DESIGN.md",
+  "docs/launch/hn.md",
+  ".github/ISSUE_TEMPLATE/balance.md",
+  ".github/ISSUE_TEMPLATE/crash.md",
+  ".github/ISSUE_TEMPLATE/save-corrupt.md",
 ];
 for (const file of requiredContent) {
   assert.ok(exists(file), `missing ${file}`);
@@ -158,5 +169,22 @@ for (const file of listJs(join(root, "js"))) {
 const gameSrc = read("js/game.js");
 assert.ok(gameSrc.includes("localStorage"), "shell must persist with localStorage");
 assert.ok(gameSrc.includes("loadContent"), "shell must load content pack");
+assert.ok(gameSrc.includes("run_end") || gameSrc.includes("runEnd"), "shell must emit run_end analytics");
+assert.ok(gameSrc.includes("togglePause"), "shell must support pause");
+assert.ok(gameSrc.includes("exportSave") && gameSrc.includes("importSave"), "shell must export/import save");
+
+const analyticsSrc = read("js/core/analytics.js");
+assert.ok(analyticsSrc.includes("run_end"), "analytics must define run_end");
+assert.ok(!/\bemail\b|ipAddress|userId/i.test(analyticsSrc), "analytics must stay privacy-light");
+
+const indexMeta = read("index.html");
+assert.ok(indexMeta.includes("og:title"), "index missing OG tags");
+assert.ok(indexMeta.includes("manifest.webmanifest"), "index missing manifest");
+assert.ok(indexMeta.includes("css/tokens.css"), "index missing CSS tokens");
+
+const renderUx = read("js/ui/render.js");
+assert.ok(renderUx.includes("data-pause"), "missing pause hook");
+assert.ok(renderUx.includes("data-export-save"), "missing export hook");
+assert.ok(renderUx.includes("data-import-save"), "missing import hook");
 
 console.log("smoke ok");

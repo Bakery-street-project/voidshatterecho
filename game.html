@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voidshatter Echo - Play the Game</title>
     <meta name="description" content="Play Voidshatter Echo - A cyberpunk mythic horror RPG where dragons weep gold and lattice voids scream.">
+    <meta name="theme-color" content="#1a0d2b">
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Play Voidshatter Echo">
+    <meta property="og:description" content="Cross the lattice, bond the Child AI, claim victory before the void ends the run.">
+    <meta property="og:url" content="https://bakery-street-project.github.io/voidshatterecho/game.html">
+    <meta property="og:image" content="https://bakery-street-project.github.io/voidshatterecho/assets/hero.jpg">
+    <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="css/game.css">
     <style>
         body {
@@ -45,6 +54,7 @@
         <div id="game-container">
             <!-- Game will be rendered here by JavaScript -->
         </div>
+        <div id="vse-toast" class="vse-toast" role="status" aria-live="polite" hidden></div>
     </div>
     
     <script type="module" src="js/game.js"></script>

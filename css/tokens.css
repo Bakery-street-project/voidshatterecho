@@ -1,0 +1,46 @@
+:root {
+  --vse-bg: #1a0d2b;
+  --vse-bg-mid: #2d1b69;
+  --vse-ink: #ffd700;
+  --vse-accent: #ff6b6b;
+  --vse-cyan: #00ffff;
+  --vse-ok: #7dffb2;
+  --vse-warn: #ff9f6b;
+  --vse-grief: #c77dff;
+  --vse-on-accent: #1a0d2b;
+  --vse-border-gold: rgba(255, 215, 0, 0.3);
+  --vse-border-rose: rgba(255, 107, 107, 0.35);
+  --vse-panel-gold: rgba(255, 215, 0, 0.1);
+  --vse-panel-rose: rgba(255, 107, 107, 0.1);
+  --vse-radius: 10px;
+  --vse-radius-pill: 25px;
+  --vse-font: "Courier New", ui-monospace, monospace;
+  --vse-space: 1rem;
+  --vse-focus: 0 0 0 3px rgba(0, 255, 255, 0.65);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --vse-motion: 0s;
+  }
+}
+
+:root {
+  --vse-motion: 0.3s;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--vse-focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

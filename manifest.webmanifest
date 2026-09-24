@@ -1,0 +1,18 @@
+{
+  "name": "Voidshatter Echo",
+  "short_name": "Voidshatter",
+  "description": "Cyberpunk mythic-horror RPG: dragons weep gold, lattice voids scream.",
+  "start_url": "./game.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1a0d2b",
+  "theme_color": "#1a0d2b",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

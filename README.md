@@ -47,12 +47,15 @@ Static HTML/ES modules/CSS only — no build step. Content lives in `content/v1/
 
 ### Layout
 
-- `js/core/` — pure rules (state, travel, victory, actions, save, rng, **ai**, **beats**)
+- `js/core/` — pure rules (state, travel, victory, actions, save, rng, **ai**, **beats**, **analytics**)
 - `js/ui/` — DOM rendering (zone art, AI portrait/mood/memory)
 - `js/content/loader.js` — loads `content/v1`
 - `content/v1/` — zones (entry/ambient beats + art), items, dialogue (AI layers), encounters (`zoneAmbient`), balance
 - `assets/` — optimized art only (webp/jpg derivatives; multi-MB sources stay untracked by the live path)
-- `tests/core.test.js` — unit tests for the loop, AI, and beats
+- `css/tokens.css` + `css/game.css` — shared design tokens
+- `tests/core.test.js` — unit tests for the loop, AI, beats, analytics
+- `e2e/run.mjs` — Playwright boot/key/fail/restart/save suite (`npm run test:e2e`)
+- `docs/PLAYTEST.md` · `docs/DESIGN.md` · `docs/launch/hn.md`
 
 ## Smoke test
 
@@ -64,7 +67,7 @@ Runs syntax checks, unit tests (`node --test`), and DOM/content smoke.
 
 ## Out of scope (v1)
 
-NFT market, weekly multiplayer, full nine-faction campaign, desktop wrapper.
+NFT market, weekly multiplayer, full nine-faction campaign, desktop wrapper — **explicitly out of scope until M5 / Phase 7 unlocks** (see `docs/ROADMAP.md` §16 backlog). Do not open NFT issues for v1.
 
 Lore cousins live in the org’s Elohim Shards materials; this repo ships the finishable web loop only.
 

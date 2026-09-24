@@ -471,3 +471,63 @@
     color: rgba(255, 215, 0, 0.8);
     font-style: italic;
 }
+
+.pause-banner {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: var(--vse-radius, 10px);
+    border: 1px solid var(--vse-cyan, #00ffff);
+    color: var(--vse-cyan, #00ffff);
+    background: rgba(0, 255, 255, 0.08);
+    font-size: 0.9rem;
+}
+
+.control-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.control-buttons .game-action {
+    margin: 0;
+}
+
+.game-action.confirm {
+    background: linear-gradient(45deg, #ff6b6b, #ff9f6b);
+    box-shadow: 0 0 0 2px #ff6b6b;
+}
+
+.confirm-hint {
+    color: #ff9f6b;
+    font-size: 0.8rem;
+    margin: 8px 0 0;
+}
+
+.vse-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+    padding: 10px 16px;
+    border-radius: var(--vse-radius-pill, 25px);
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid rgba(255, 215, 0, 0.55);
+    color: #ffd700;
+    font-size: 0.85rem;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+    transition: opacity 0.25s ease;
+}
+
+.vse-toast[hidden] {
+    display: none;
+}
+
+.game-action:focus-visible,
+.back-link:focus-visible,
+.play-button:focus-visible {
+    outline: none;
+    box-shadow: var(--vse-focus, 0 0 0 3px rgba(0, 255, 255, 0.65));
+}
