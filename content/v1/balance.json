@@ -40,7 +40,9 @@
     "levelUpSanityBonus": 20,
     "aiBondWinThreshold": 70,
     "tickSeconds": 1,
-    "randomEventChance": 0.08
+    "randomEventChance": 0.08,
+    "ambientEncounterChance": 0.55,
+    "zoneTickBeatChance": 0.1
   },
   "winGate": {
     "requireFacedDragon": true,

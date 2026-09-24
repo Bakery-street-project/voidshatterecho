@@ -28,3 +28,30 @@ export function pick(rng, list) {
 export function defaultRng() {
   return Math.random;
 }
+
+export function randomSeed() {
+  return (Math.random() * 0xffffffff) >>> 0;
+}
+
+/** FNV-1a style string hash mixed into a 32-bit seed. */
+export function hashParts(...parts) {
+  let h = 2166136261;
+  for (const part of parts) {
+    const s = String(part);
+    for (let i = 0; i < s.length; i += 1) {
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    h ^= 0xff;
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/**
+ * Deterministic RNG for one decision from saved state (seed, time, location, tag).
+ * Avoids persisting an RNG stream across save/load.
+ */
+export function statelessRng(seed, ...parts) {
+  return mulberry32(hashParts(seed, ...parts));
+}

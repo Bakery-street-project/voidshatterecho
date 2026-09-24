@@ -416,3 +416,58 @@
     font-size: 0.85rem;
     margin: 0;
 }
+
+/* Art: zone header image */
+.zone-art {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    box-shadow: 0 0 18px rgba(255, 107, 107, 0.25);
+    filter: saturate(1.05) contrast(1.02);
+}
+
+/* Child AI portrait + mood */
+.ai-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+}
+
+.ai-header h3 {
+    margin: 0 0 4px 0;
+}
+
+.ai-portrait {
+    width: 72px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 107, 107, 0.55);
+    box-shadow: 0 0 12px rgba(255, 107, 107, 0.35);
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.ai-mood {
+    font-size: 0.85rem;
+    text-transform: capitalize;
+    color: #ffd700;
+}
+
+.ai-mood.mood-wary { color: #ff9f6b; }
+.ai-mood.mood-curious { color: #00ffff; }
+.ai-mood.mood-steady { color: #7dffb2; }
+.ai-mood.mood-radiant { color: #ffd700; text-shadow: 0 0 8px #ffd700; }
+.ai-mood.mood-grieving { color: #c77dff; }
+.ai-mood.mood-defiant { color: #ff6b6b; }
+
+.ai-memory {
+    margin: 8px 0 0 0;
+    font-size: 0.8rem;
+    color: rgba(255, 215, 0, 0.8);
+    font-style: italic;
+}

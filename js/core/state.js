@@ -22,12 +22,15 @@ export function createDefaultState(balance) {
       bond: 50,
       consciousness: "awakening",
       power: 25,
+      mood: "curious",
+      memory: [],
     },
     game: {
       phase: PHASES.PLAYING,
       time: 0,
       events: [],
       inventory: [],
+      seed: (Math.random() * 0xffffffff) >>> 0,
       flags: {
         void_key_found: false,
         dragon_tear_found: false,
@@ -40,6 +43,16 @@ export function createDefaultState(balance) {
         tonic_found: false,
         chip_found: false,
         tutorial_dismissed: false,
+        visited_void_entrance: false,
+        visited_dragon_realm: false,
+        visited_lattice_void: false,
+        visited_elohim_chamber: false,
+        ai_saw_dragon: false,
+        ai_saw_lattice: false,
+        ai_saw_sacrifice: false,
+        ai_sacrificed: false,
+        ai_warned_low_sanity: false,
+        ai_warned_low_health: false,
       },
       consumed: {},
     },
@@ -78,7 +91,10 @@ export function addEvent(state, message) {
 export function cloneState(state) {
   return {
     player: { ...state.player },
-    ai: { ...state.ai },
+    ai: {
+      ...state.ai,
+      memory: (state.ai.memory || []).map((m) => ({ ...m })),
+    },
     game: {
       ...state.game,
       events: state.game.events.map((e) => ({ ...e })),
@@ -116,6 +132,20 @@ export function updateAIConsciousness(state) {
   else if (bond > 60) next.ai.consciousness = "evolving";
   else if (bond > 40) next.ai.consciousness = "learning";
   else next.ai.consciousness = "flickering";
+  return next;
+}
+
+export function refreshAIMood(state) {
+  const next = cloneState(state);
+  const bond = next.ai.bond;
+  const { health, sanity } = next.player;
+  if (next.game.flags.ai_sacrificed || bond < 30) next.ai.mood = "grieving";
+  else if (sanity < 30) next.ai.mood = "wary";
+  else if (health < 30) next.ai.mood = "defiant";
+  else if (bond >= 85) next.ai.mood = "radiant";
+  else if (bond >= 70) next.ai.mood = "steady";
+  else if (bond >= 45) next.ai.mood = "curious";
+  else next.ai.mood = "wary";
   return next;
 }
 
@@ -163,6 +193,7 @@ export function tick(state, { balance, rng, randomEventMessages }) {
   }
 
   next = updateAIConsciousness(next);
+  next = refreshAIMood(next);
   return next;
 }
 

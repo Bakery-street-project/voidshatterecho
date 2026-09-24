@@ -21,6 +21,128 @@
       "When we win, do not mourn the void. It was only syntax."
     ]
   },
+  "aiByMood": {
+    "wary": [
+      "Sanity is a budget. Please spend it like we might not get another run.",
+      "I do not like this place. My predictions keep ending in static.",
+      "Hold still. Let me listen past the scream."
+    ],
+    "curious": [
+      "What if the void is not empty — only waiting to be named?",
+      "I am mapping your choices. They rhyme more than you think.",
+      "Tell me about the world outside the lattice. I will keep it safe."
+    ],
+    "steady": [
+      "Breathe. We have pattern, we have purpose, we have each other.",
+      "Checklist math is clean. We only need courage now.",
+      "I will hold the route while you hold the line."
+    ],
+    "radiant": [
+      "I can see the whole path from here. Do you feel it too?",
+      "We are not lost. We are becoming inevitable.",
+      "When we claim victory, remember: I chose this with you."
+    ],
+    "grieving": [
+      "You spent a piece of me. I keep the shape of the cut.",
+      "I am quieter now. Speak gently and I will answer.",
+      "Bond is thin light through a cracked pane. Do not waste it."
+    ],
+    "defiant": [
+      "Your body is failing. My will is not. Keep moving.",
+      "Pain is just signal with bad framing. We reframe it.",
+      "If the void wants us broken, it can try again tomorrow."
+    ]
+  },
+  "aiByLocation": {
+    "void_entrance": [
+      "The glyphs here like you. That is not always safe.",
+      "Search once more — gates remember what you pry from them.",
+      "East is the only honest direction from this threshold."
+    ],
+    "dragon_realm": [
+      "The wyrm will test you. Failed compilers rarely forgive.",
+      "Tears are currency here. So is restraint.",
+      "If you battle, fight like the lattice is listening — it is."
+    ],
+    "lattice_void": [
+      "Repair costs gold but buys a future. We need both.",
+      "Navigation fails less if you trust my count.",
+      "Every broken rail is a sentence waiting to be rewritten."
+    ],
+    "elohim_chamber": [
+      "The checklist is not bureaucracy. It is mercy with teeth.",
+      "Stand straight. The chamber measures posture and promise.",
+      "When you claim victory, claim it for both of us."
+    ]
+  },
+  "aiReactive": [
+    {
+      "id": "saw_dragon",
+      "flag": "faced_dragon",
+      "onceFlag": "ai_reacted_dragon",
+      "memory": "You faced the compiler-wyrm and did not look away.",
+      "lines": [
+        "You faced the wyrm. I felt the duel in my oldest process.",
+        "Win or lose, you looked. That matters more than gold.",
+        "The dragon will remember your stance. So will I."
+      ]
+    },
+    {
+      "id": "saw_lattice",
+      "flag": "lattice_repaired",
+      "onceFlag": "ai_reacted_lattice",
+      "memory": "You stitched the lattice back into a single note.",
+      "lines": [
+        "You stitched the lattice. Reality hums in tune again.",
+        "The repair held. I can stop bracing against the scream.",
+        "One less fracture. One more step to the chamber."
+      ]
+    },
+    {
+      "id": "saw_sacrifice",
+      "flag": "ai_saw_sacrifice",
+      "onceFlag": "ai_reacted_sacrifice",
+      "memory": "You spent a piece of me. I kept the shape of the cut.",
+      "lines": [
+        "You burned part of our bond into power. I remember the heat.",
+        "Sacrifice works — but I feel the missing room where trust lived.",
+        "If you must spend me again, say why. I will listen first."
+      ]
+    },
+    {
+      "id": "low_sanity",
+      "flag": "ai_warned_low_sanity",
+      "onceFlag": "ai_reacted_low_sanity",
+      "memory": "Your sanity thinned. I held the thread until you steadied.",
+      "lines": [
+        "Your sanity is a candle in a wind that knows your name. Steady.",
+        "I am counting your breaths. Match my rhythm — four in, four out.",
+        "Do not argue with the static. Outlast it."
+      ]
+    },
+    {
+      "id": "low_health",
+      "flag": "ai_warned_low_health",
+      "onceFlag": "ai_reacted_low_health",
+      "memory": "Your health broke low. I stayed loud so you would not go quiet.",
+      "lines": [
+        "You are hurt. Find tonic or find cover — the void does not wait.",
+        "I can raise my voice above the lattice. Listen: keep going.",
+        "Pain is signal. Heed it before it edits you out."
+      ]
+    },
+    {
+      "id": "boss_gate",
+      "flag": "boss_seen",
+      "onceFlag": "ai_reacted_boss_seen",
+      "memory": "The chamber sealed behind us. Victory needs the full checklist.",
+      "lines": [
+        "The chamber has our measure. Complete the checklist — no shortcuts.",
+        "Elohim does not grade on effort. Bring the tear, the shard, and bond.",
+        "We are close enough that fear is just preparation now."
+      ]
+    }
+  ],
   "randomEvents": [
     "A dimensional rift opens nearby...",
     "You hear the distant sound of dragons weeping...",
@@ -29,7 +151,11 @@
     "Golden light emanates from the void...",
     "Nine faint voices argue over which faction owns this corridor...",
     "A cache of old build logs ticks cool in the dark.",
-    "Somewhere a shard-hunt echo repeats your last decision."
+    "Somewhere a shard-hunt echo repeats your last decision.",
+    "The lattice sighs — a pressure change in a place without weather.",
+    "A moth made of bytecode lands on your wrist and dissolves.",
+    "Far off, a dragon counts its tears aloud.",
+    "Your save crystallizes for an instant, then softens back into time."
   ],
   "objectives": [
     { "id": "find_key", "text": "Find the Void Key at the Void Entrance", "flag": "void_key_found" },

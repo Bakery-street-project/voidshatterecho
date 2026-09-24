@@ -55,9 +55,17 @@ const requiredContent = [
   "js/core/travel.js",
   "js/core/actions.js",
   "js/core/rng.js",
+  "js/core/ai.js",
+  "js/core/beats.js",
   "js/content/loader.js",
   "js/ui/render.js",
   "js/game.js",
+  "assets/hero.jpg",
+  "assets/portraits/child-ai.webp",
+  "assets/zones/void-entrance.webp",
+  "assets/zones/dragon-realm.webp",
+  "assets/zones/lattice-void.webp",
+  "assets/zones/elohim-chamber.webp",
 ];
 for (const file of requiredContent) {
   assert.ok(exists(file), `missing ${file}`);
@@ -82,7 +90,29 @@ for (const z of requiredZones) {
   assert.ok(zones[z], `missing zone ${z}`);
   assert.ok(Array.isArray(zones[z].actions) && zones[z].actions.length > 0, `${z} actions`);
   assert.ok(zones[z].exits, `${z} exits`);
+  assert.ok(Array.isArray(zones[z].entryBeats) && zones[z].entryBeats.length > 0, `${z} entryBeats`);
+  assert.ok(Array.isArray(zones[z].ambientBeats) && zones[z].ambientBeats.length > 0, `${z} ambientBeats`);
+  assert.ok(typeof zones[z].art === "string" && zones[z].art.startsWith("assets/"), `${z} art`);
 }
+
+const encounters = JSON.parse(read("content/v1/encounters.json"));
+assert.ok(encounters.zoneAmbient, "missing zoneAmbient tables");
+for (const z of requiredZones) {
+  assert.ok(Array.isArray(encounters.zoneAmbient[z]) && encounters.zoneAmbient[z].length > 0, `ambient ${z}`);
+}
+
+const dialogue = JSON.parse(read("content/v1/dialogue.json"));
+assert.ok(dialogue.aiByMood && dialogue.aiByLocation && dialogue.aiReactive, "dialogue AI keys");
+assert.ok(Array.isArray(dialogue.aiReactive) && dialogue.aiReactive.length >= 3, "reactive rules");
+
+const renderSrcCheck = read("js/ui/render.js");
+assert.ok(renderSrcCheck.includes("ai-portrait"), "missing AI portrait hook");
+assert.ok(renderSrcCheck.includes("zone-art"), "missing zone art hook");
+assert.ok(renderSrcCheck.includes("aiStatusSummary") || renderSrcCheck.includes("ai-memory"), "missing AI memory/mood");
+
+const indexSrc = read("index.html");
+assert.ok(indexSrc.includes("assets/hero.jpg"), "index should use optimized hero art");
+assert.ok(!indexSrc.includes('src="Ai.png"'), "index should not ship raw multi-MB Ai.png");
 
 const requiredActions = [
   "collect_gold",

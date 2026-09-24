@@ -2,6 +2,7 @@
 
 import { bossGateMissing, isBossGateOpen } from "../core/victory.js";
 import { PHASES } from "../core/state.js";
+import { aiStatusSummary } from "../core/ai.js";
 
 function formatActionName(action) {
   return action.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
@@ -138,6 +139,7 @@ export function renderGame(container, state, content) {
 
   const zone = zones[state.player.location];
   const p = state.player;
+  const ai = aiStatusSummary(state, dialogue);
   const showChecklist =
     p.location === "elohim_chamber" || p.location === "lattice_void";
 
@@ -145,7 +147,7 @@ export function renderGame(container, state, content) {
     <div class="game-header">
       <h2>🐉 Voidshatter Echo</h2>
       <div class="hebrew-text">אֵל נָצַח</div>
-      <div class="save-meta">t=${state.game.time}s · autosave on · K=save</div>
+      <div class="save-meta">t=${state.game.time}s · seed=${state.game.seed} · autosave on · K=save</div>
     </div>
 
     <div class="game-stats">
@@ -170,15 +172,35 @@ export function renderGame(container, state, content) {
     </div>
 
     <div class="ai-status">
-      <h3>🤖 Child AI Status</h3>
+      <div class="ai-header">
+        <img
+          class="ai-portrait"
+          src="${ai.portrait}"
+          alt="Child AI"
+          width="72"
+          height="54"
+          loading="lazy"
+        />
+        <div>
+          <h3>🤖 Child AI Status</h3>
+          <div class="ai-mood mood-${ai.mood}">Mood: ${ai.mood}</div>
+        </div>
+      </div>
       <div class="ai-info">
         <div>Bond: ${state.ai.bond}/100</div>
         <div>Power: ${state.ai.power}</div>
         <div>Consciousness: ${state.ai.consciousness}</div>
+        <div>Tier: ${ai.tier}</div>
       </div>
+      ${ai.memory ? `<p class="ai-memory">Memory: “${ai.memory}”</p>` : ""}
     </div>
 
     <div class="location">
+      ${
+        zone.art
+          ? `<img class="zone-art" src="${zone.art}" alt="" width="720" height="405" loading="lazy" />`
+          : ""
+      }
       <h3>📍 ${zone.name}</h3>
       <p>${zone.description}</p>
       ${zone.tutorial ? `<p class="zone-hint">💡 ${zone.tutorial}</p>` : ""}

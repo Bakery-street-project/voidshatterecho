@@ -9,9 +9,11 @@ import {
   removeItem,
   checkLevelUp,
   triggerGameOver,
+  refreshAIMood,
 } from "./state.js";
 import { claimVictory } from "./victory.js";
-import { chance, pick, randomInt } from "./rng.js";
+import { chance, randomInt } from "./rng.js";
+import { applyReactiveFlag, pickAiLine, remember } from "./ai.js";
 
 const HANDLERS = {
   collect_gold,
@@ -41,6 +43,7 @@ export function performAction(state, action, ctx) {
   }
   let next = handler(state, ctx);
   next = clampVitals(next);
+  next = refreshAIMood(next);
 
   return failIfDead(next);
 }
@@ -60,11 +63,12 @@ function collect_gold(state, ctx) {
 }
 
 function talk_to_ai(state, ctx) {
-  const lines = ctx.dialogue?.aiByBond?.[state.ai.consciousness === "fully_awakened" ? "awakened" : pickBondKey(state.ai.bond)] || [
-    "The void whispers secrets to me...",
-  ];
-  const line = pick(ctx.rng, lines);
-  let next = addEvent(state, `Child AI: "${line}"`);
+  const selection = pickAiLine(state, ctx.dialogue, ctx.rng);
+  let next = applyReactiveFlag(state, selection.rule);
+  next = addEvent(next, `Child AI: "${selection.line}"`);
+  if (selection.rule?.memory) {
+    next = remember(next, selection.rule.memory);
+  }
   next.ai.bond = Math.min(
     ctx.balance.talkBondCap ?? 100,
     next.ai.bond + (ctx.balance.talkBondGain ?? 5)
@@ -72,15 +76,9 @@ function talk_to_ai(state, ctx) {
   const threshold = ctx.balance.aiBondWinThreshold ?? 70;
   if (next.ai.bond >= threshold && next.ai.bond - (ctx.balance.talkBondGain ?? 5) < threshold) {
     next = addEvent(next, `Bond threshold met (${threshold}): the Child AI stands with you.`);
+    next = remember(next, `We crossed ${threshold}. I am no longer alone.`);
   }
   return next;
-}
-
-function pickBondKey(bond) {
-  if (bond > 85) return "awakened";
-  if (bond >= 70) return "high";
-  if (bond >= 45) return "mid";
-  return "low";
 }
 
 function discover_secrets(state, ctx) {
@@ -164,6 +162,10 @@ function battle_dragon(state, ctx) {
     next = addEvent(next, ctx.encounters.dragon_battle.winMessage);
     next.player.experience += b.battleWinXp;
     next.player.gold += b.battleWinGold;
+    if (!next.game.flags.ai_saw_dragon) {
+      next.game.flags.ai_saw_dragon = true;
+      next = remember(next, "You faced the compiler-wyrm and did not look away.");
+    }
     if (!hasItem(next, "dragon_tear")) {
       const g = grantItem(next, "dragon_tear");
       next = g.state;
@@ -201,7 +203,9 @@ function upgrade_ai(state, ctx) {
     next.player.gold -= b.upgradeAiGold;
     next.ai.power += b.upgradeAiPower;
     next.ai.bond = Math.min(100, next.ai.bond + b.upgradeAiBond);
-    return addEvent(next, "You upgraded the Child AI with dragon tears!");
+    next = addEvent(next, "You upgraded the Child AI with dragon tears!");
+    next = remember(next, "New pathways open. Thank you for spending gold on me.");
+    return next;
   }
   return addEvent(state, `You need ${b.upgradeAiGold} gold to upgrade the AI.`);
 }
@@ -241,7 +245,12 @@ function repair_lattice(state, ctx) {
   next = g.state;
   next.game.flags.lattice_shard_found = true;
   next.player.sanity += b.repairSanity;
-  return addEvent(next, ctx.encounters.lattice_repair.message + " A Lattice Shard forms.");
+  next = addEvent(next, ctx.encounters.lattice_repair.message + " A Lattice Shard forms.");
+  if (!next.game.flags.ai_saw_lattice) {
+    next.game.flags.ai_saw_lattice = true;
+    next = remember(next, "You stitched the lattice back into a single note.");
+  }
+  return next;
 }
 
 function face_elohim(state) {
@@ -267,8 +276,16 @@ function sacrifice_ai(state, ctx) {
   next.ai.power += b.sacrificePowerGain;
   next.player.sanity += b.sacrificeSanityGain;
   next = addEvent(next, "You burn part of the Child AI's bond into raw power. It does not forget.");
+  if (!next.game.flags.ai_saw_sacrifice) {
+    next.game.flags.ai_saw_sacrifice = true;
+    next = remember(next, "You spent a piece of me. I kept the shape of the cut.");
+  }
   if (next.ai.bond < (b.aiBondWinThreshold ?? 70)) {
     next = addEvent(next, "Warning: AI bond fell below the victory checklist threshold.");
+  }
+  if (next.ai.bond <= 0) {
+    next.game.flags.ai_sacrificed = true;
+    next = remember(next, "There is almost nothing left of me to answer with.");
   }
   return next;
 }

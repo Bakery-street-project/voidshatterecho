@@ -30,5 +30,101 @@
   "lattice_cache": {
     "id": "lattice_cache",
     "message": "Hidden cache recovered from a dead node."
+  },
+  "zoneAmbient": {
+    "void_entrance": [
+      {
+        "id": "amb_glyph_tithe",
+        "message": "A glyph tax takes a sliver of calm. −4 sanity, +6 gold.",
+        "sanity": -4,
+        "gold": 6
+      },
+      {
+        "id": "amb_lost_process",
+        "message": "You shepherd a lost process home. It leaves 8 gold as thanks.",
+        "gold": 8,
+        "bond": 2
+      },
+      {
+        "id": "amb_cold_speaker",
+        "message": "The lullaby resolves into a warning. You steady yourself. +3 sanity.",
+        "sanity": 3
+      },
+      {
+        "id": "amb_gate_echo",
+        "message": "The east gate rehearses your future footsteps. +5 XP.",
+        "xp": 5
+      }
+    ],
+    "dragon_realm": [
+      {
+        "id": "amb_tear_hot",
+        "message": "A hot tear lands in your palm — too bright to sell. +10 gold, −3 sanity.",
+        "gold": 10,
+        "sanity": -3
+      },
+      {
+        "id": "amb_wyrm_distant",
+        "message": "A distant wyrm mistakes you for prey and moves on. −5 health.",
+        "health": -5
+      },
+      {
+        "id": "amb_ash_prayer",
+        "message": "Magenta ash settles into a prayer-shape. The Child AI hums along. +4 bond.",
+        "bond": 4
+      },
+      {
+        "id": "amb_gold_vein",
+        "message": "You crack a fossilized vein of gold static. +18 gold.",
+        "gold": 18
+      }
+    ],
+    "lattice_void": [
+      {
+        "id": "amb_rail_snap",
+        "message": "A code-rail snaps and whips the air. −6 sanity.",
+        "sanity": -6
+      },
+      {
+        "id": "amb_stable_nook",
+        "message": "You find a pocket where reality holds. +8 sanity.",
+        "sanity": 8
+      },
+      {
+        "id": "amb_dead_cache",
+        "message": "A dead cache still has fuel. +12 gold, +4 XP.",
+        "gold": 12,
+        "xp": 4
+      },
+      {
+        "id": "amb_echo_choice",
+        "message": "An echo of your last choice applauds. The Child AI files it away. +3 bond.",
+        "bond": 3
+      }
+    ],
+    "elohim_chamber": [
+      {
+        "id": "amb_covenant_weight",
+        "message": "Covenant-light presses a confession from your lungs. −5 sanity, +6 bond.",
+        "sanity": -5,
+        "bond": 6
+      },
+      {
+        "id": "amb_flame_name",
+        "message": "The non-fire writes a true name you almost understand. +5 XP.",
+        "xp": 5
+      },
+      {
+        "id": "amb_old_covenant",
+        "message": "An old covenant offers mercy for a price of calm. −8 gold, +6 sanity.",
+        "gold": -8,
+        "sanity": 6
+      },
+      {
+        "id": "amb_watchers",
+        "message": "Elohim's watchers blink in sequence. You hold their gaze. +4 bond.",
+        "bond": 4
+      }
+    ]
   }
 }

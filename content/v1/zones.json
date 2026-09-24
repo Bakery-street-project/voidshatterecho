@@ -4,37 +4,85 @@
       "id": "void_entrance",
       "name": "Void Entrance",
       "description": "The gateway to the digital void where reality bends and breaks. Glyphs pulse underfoot like a heartbeat that is not yours.",
+      "art": "assets/zones/void-entrance.webp",
       "actions": ["collect_gold", "talk_to_ai", "discover_secrets", "scavenge_tonic"],
       "exits": { "north": null, "south": null, "east": "dragon_realm", "west": null },
       "requiresExit": {},
-      "tutorial": "Use Discover Secrets to find the Void Key, then travel East."
+      "tutorial": "Use Discover Secrets to find the Void Key, then travel East.",
+      "entryBeats": [
+        "The threshold tastes like copper. Glyphs rearrange themselves behind your heels.",
+        "A bootprint that is not yours already points east. The void expected company.",
+        "Static breathes in your language here. Something under the gate is listening."
+      ],
+      "ambientBeats": [
+        "A dead speaker loops a lullaby in three broken keys.",
+        "Gold dust drifts uphill against the light.",
+        "Your shadow rehearses a door you have not opened yet.",
+        "Somewhere below, a child process counts to forever."
+      ]
     },
     "dragon_realm": {
       "id": "dragon_realm",
       "name": "Dragon Realm",
       "description": "Ancient dragons weep golden tears in this corrupted digital realm. Heatless fire paints the canopy in magenta static.",
+      "art": "assets/zones/dragon-realm.webp",
       "actions": ["battle_dragon", "collect_tears", "upgrade_ai", "talk_to_ai"],
       "exits": { "north": null, "south": null, "east": "lattice_void", "west": "void_entrance" },
       "requiresExit": { "east": "void_key" },
-      "tutorial": "Battle or collect tears. Secure a Dragon Tear. Hold 50 gold to upgrade the Child AI."
+      "tutorial": "Battle or collect tears. Secure a Dragon Tear. Hold 50 gold to upgrade the Child AI.",
+      "entryBeats": [
+        "The canopy ignites without heat. A wyrm's silhouette stitches the sky.",
+        "Tears of gold pool in claw-marks older than the lattice.",
+        "Magenta static settles like ash. The dragons here failed at compilation — and remember you."
+      ],
+      "ambientBeats": [
+        "A distant roar resolves into a stack trace.",
+        "Scales glitter underfoot, still warm from a fight you did not witness.",
+        "The air smells of ozone and unfinished apologies.",
+        "Nine faint voices argue over which faction owns this corridor."
+      ]
     },
     "lattice_void": {
       "id": "lattice_void",
       "name": "Lattice Void",
       "description": "Dimensional rifts scream with the sound of breaking reality. Broken code-rails hang like frozen lightning.",
+      "art": "assets/zones/lattice-void.webp",
       "actions": ["navigate_void", "repair_lattice", "discover_secrets", "scavenge_tonic"],
       "exits": { "north": null, "south": null, "east": "elohim_chamber", "west": "dragon_realm" },
       "requiresExit": { "east": "boss_gate" },
-      "tutorial": "Earn 30 gold, Repair the lattice for the Lattice Shard, raise AI bond to 70."
+      "tutorial": "Earn 30 gold, Repair the lattice for the Lattice Shard, raise AI bond to 70.",
+      "entryBeats": [
+        "The rift screams in a frequency that rearranges your inventory order.",
+        "Code-rails hang like frozen lightning. Repair them — or learn their broken song.",
+        "Reality frays at the seams. Every step writes a line that may not hold."
+      ],
+      "ambientBeats": [
+        "A shard-hunt echo repeats your last decision with better timing.",
+        "The void confuses gravity for a moment — then apologizes in silence.",
+        "A cache of old build logs ticks cool in the dark.",
+        "You hear yourself arguing with a version of yourself that left earlier."
+      ]
     },
     "elohim_chamber": {
       "id": "elohim_chamber",
       "name": "Elohim Chamber",
       "description": "The final challenge where you must claim אֵל נָצַח or burn. The air tastes of ozone and old covenants.",
+      "art": "assets/zones/elohim-chamber.webp",
       "actions": ["face_elohim", "claim_victory", "sacrifice_ai", "talk_to_ai"],
       "exits": { "north": null, "south": null, "east": null, "west": "lattice_void" },
       "requiresExit": {},
-      "tutorial": "Confirm the checklist, then Claim Victory."
+      "tutorial": "Confirm the checklist, then Claim Victory.",
+      "entryBeats": [
+        "The chamber locks behind you. Victory needs more than nerve.",
+        "Covenant-light presses down like a second skeleton. Elohim is already watching.",
+        "Your bond, your tear, your shard — the air weighs each of them."
+      ],
+      "ambientBeats": [
+        "A flame that is not fire writes your name in a language you almost know.",
+        "The Child AI goes quiet. Even silence has a checklist here.",
+        "Old covenants rustle in the walls like paper wings.",
+        "אֵל pulses once — a heartbeat testing whether yours will answer."
+      ]
     }
   },
   "travelLabels": {

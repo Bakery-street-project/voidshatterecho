@@ -8,7 +8,10 @@ export function serializeState(state) {
     version: SAVE_VERSION,
     savedAt: new Date().toISOString(),
     player: { ...state.player },
-    ai: { ...state.ai },
+    ai: {
+      ...state.ai,
+      memory: (state.ai.memory || []).map((m) => ({ ...m })),
+    },
     game: {
       phase:
         state.game.phase === "game_over" || state.game.phase === "victory"
@@ -19,6 +22,7 @@ export function serializeState(state) {
       inventory: [...state.game.inventory],
       flags: { ...state.game.flags },
       consumed: { ...(state.game.consumed || {}) },
+      seed: state.game.seed ?? 0,
     },
     meta: { version: SAVE_VERSION },
   };
@@ -36,9 +40,12 @@ export function parseSave(raw, defaultsFactory) {
   if (!data.player || !data.game) return null;
 
   const base = defaultsFactory();
+  const aiMemory = Array.isArray(data.ai?.memory)
+    ? data.ai.memory.map((m) => ({ ...m }))
+    : [];
   return {
     player: { ...base.player, ...data.player },
-    ai: { ...base.ai, ...data.ai },
+    ai: { ...base.ai, ...data.ai, memory: aiMemory },
     game: {
       ...base.game,
       ...data.game,
@@ -47,6 +54,10 @@ export function parseSave(raw, defaultsFactory) {
       consumed: { ...base.game.consumed, ...(data.game.consumed || {}) },
       inventory: Array.isArray(data.game.inventory) ? [...data.game.inventory] : [],
       events: Array.isArray(data.game.events) ? data.game.events.map((e) => ({ ...e })) : [],
+      seed:
+        typeof data.game.seed === "number" && data.game.seed > 0
+          ? data.game.seed
+          : base.game.seed,
     },
     meta: { version: SAVE_VERSION, savedAt: data.savedAt || null },
   };

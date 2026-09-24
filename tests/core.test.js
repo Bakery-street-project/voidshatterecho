@@ -9,7 +9,9 @@ import { bossGateMissing, claimVictory, isBossGateOpen } from "../js/core/victor
 import { travel, meetsExitRequirement, canExit } from "../js/core/travel.js";
 import { performAction, KNOWN_ACTIONS } from "../js/core/actions.js";
 import { parseSave, serializeState, SAVE_VERSION } from "../js/core/save.js";
-import { mulberry32, randomInt, chance, pick } from "../js/core/rng.js";
+import { mulberry32, randomInt, chance, pick, statelessRng, hashParts } from "../js/core/rng.js";
+import { deriveMood, pickAiLine, remember, lastMemory } from "../js/core/ai.js";
+import { onZoneArrive, onZoneTick } from "../js/core/beats.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (p) => JSON.parse(readFileSync(join(root, p), "utf8"));
@@ -241,4 +243,107 @@ test("meet exit requirement void_key only", () => {
   const withKey = stateWith(["void_key"]);
   assert.equal(meetsExitRequirement(withKey, "void_key", content.winGate), true);
   assert.equal(meetsExitRequirement(withKey, null, content.winGate), true);
+});
+
+test("ai mood tracks bond and vitals", () => {
+  assert.equal(deriveMood(stateWith([], {}, { ai: { bond: 50 } })), "curious");
+  assert.equal(deriveMood(stateWith([], {}, { ai: { bond: 90 } })), "radiant");
+  assert.equal(
+    deriveMood(stateWith([], {}, { ai: { bond: 50 }, player: { sanity: 10 } })),
+    "wary"
+  );
+  assert.equal(
+    deriveMood(stateWith([], {}, { ai: { bond: 50 }, player: { health: 10 } })),
+    "defiant"
+  );
+  const sacrificed = stateWith([], { ai_sacrificed: true }, { ai: { bond: 0 } });
+  assert.equal(deriveMood(sacrificed), "grieving");
+});
+
+test("remember caps memory and lastMemory reads newest", () => {
+  let s = createDefaultState(content.balance);
+  for (let i = 0; i < 9; i += 1) s = remember(s, `m${i}`);
+  assert.equal(s.ai.memory.length, 6);
+  assert.equal(lastMemory(s), "m8");
+});
+
+test("pickAiLine prefers reactive rule once flag set", () => {
+  const s = stateWith([], { faced_dragon: true }, { ai: { bond: 50 } });
+  const selection = pickAiLine(s, dialogue, mulberry32(5));
+  assert.ok(selection.rule);
+  assert.equal(selection.rule.id, "saw_dragon");
+  assert.ok(selection.line.length > 0);
+});
+
+test("statelessRng is deterministic for same parts", () => {
+  const a = statelessRng(42, 3, "lattice_void", "arrive");
+  const b = statelessRng(42, 3, "lattice_void", "arrive");
+  assert.equal(a(), b());
+  assert.notEqual(hashParts(1, "a"), hashParts(1, "b"));
+});
+
+test("onZoneArrive fires first-visit entry beat once", () => {
+  let s = createDefaultState(content.balance);
+  s.player.location = "dragon_realm";
+  s.game.flags.visited_dragon_realm = false;
+  const first = onZoneArrive(s, content, mulberry32(9));
+  assert.equal(first.game.flags.visited_dragon_realm, true);
+  assert.ok(first.game.events.length >= 1);
+  const second = onZoneArrive(first, content, mulberry32(9));
+  const entryCount = second.game.events.filter((e) =>
+    (content.zones.dragon_realm.entryBeats || []).includes(e.message)
+  ).length;
+  const firstEntryCount = first.game.events.filter((e) =>
+    (content.zones.dragon_realm.entryBeats || []).includes(e.message)
+  ).length;
+  assert.equal(entryCount, firstEntryCount);
+});
+
+test("onZoneArrive ambient is deterministic under seed", () => {
+  const base = createDefaultState(content.balance);
+  base.player.location = "void_entrance";
+  base.game.flags.visited_void_entrance = true;
+  const r1 = onZoneArrive(base, content, statelessRng(77, 10, "void_entrance", "arrive"));
+  const r2 = onZoneArrive(base, content, statelessRng(77, 10, "void_entrance", "arrive"));
+  assert.deepEqual(
+    r1.game.events.map((e) => e.message),
+    r2.game.events.map((e) => e.message)
+  );
+  assert.deepEqual(r1.player, r2.player);
+});
+
+test("save preserves seed mood and memory", () => {
+  let s = stateWith([], {}, { ai: { bond: 66, mood: "steady", memory: [{ text: "hello", at: 1 }] } });
+  s.game.seed = 12345;
+  const restored = parseSave(JSON.stringify(serializeState(s)), () => createDefaultState(content.balance));
+  assert.equal(restored.game.seed, 12345);
+  assert.equal(restored.ai.mood, "steady");
+  assert.equal(restored.ai.memory[0].text, "hello");
+});
+
+test("zone content has art beats and ambient tables", () => {
+  for (const zone of Object.values(content.zones)) {
+    assert.ok(zone.art?.startsWith("assets/"), `${zone.id} art`);
+    assert.ok(zone.entryBeats?.length > 0, `${zone.id} entryBeats`);
+    assert.ok(zone.ambientBeats?.length > 0, `${zone.id} ambientBeats`);
+    assert.ok(content.encounters.zoneAmbient?.[zone.id]?.length > 0, `${zone.id} ambient`);
+  }
+  assert.ok(dialogue.aiByMood);
+  assert.ok(dialogue.aiByLocation);
+  assert.ok(dialogue.aiReactive?.length >= 3);
+});
+
+test("onZoneTick can emit ambient beat deterministically", () => {
+  const s = createDefaultState(content.balance);
+  s.player.location = "lattice_void";
+  let fired = null;
+  for (let t = 0; t < 50; t += 1) {
+    const next = onZoneTick(s, content, statelessRng(3, t, "lattice_void", `tick_${t}`));
+    if (next !== s) {
+      fired = next;
+      break;
+    }
+  }
+  assert.ok(fired, "expected at least one tick beat in 50 rolls");
+  assert.ok(content.zones.lattice_void.ambientBeats.includes(fired.game.events[0].message));
 });

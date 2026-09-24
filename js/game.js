@@ -14,7 +14,8 @@ import {
 import { performAction, KNOWN_ACTIONS } from "./core/actions.js";
 import { travel } from "./core/travel.js";
 import { SAVE_KEY, parseSave, serializeState } from "./core/save.js";
-import { defaultRng } from "./core/rng.js";
+import { defaultRng, mulberry32, statelessRng } from "./core/rng.js";
+import { onZoneArrive, onZoneTick } from "./core/beats.js";
 import { renderGame } from "./ui/render.js";
 
 class VoidshatterEcho {
@@ -37,10 +38,44 @@ class VoidshatterEcho {
   init() {
     this.setupEventListeners();
     if (!this.tryLoadGame()) {
+      this.applyArrivalBeats();
       this.addEvent("You arrive at the Void Entrance. The lattice hums eastward.");
     }
     this.render();
     this.startGameLoop();
+  }
+
+  arrivalRng(tag = "arrive") {
+    const g = this.gameState.game;
+    return statelessRng(g.seed, g.time, this.gameState.player.location, tag);
+  }
+
+  applyArrivalBeats() {
+    this.gameState = onZoneArrive(
+      this.gameState,
+      this.content,
+      this.arrivalRng("arrive")
+    );
+  }
+
+  warnAiThresholds() {
+    const s = this.gameState;
+    if (s.game.phase !== PHASES.PLAYING) return;
+    if (s.player.sanity < 30 && !s.game.flags.ai_warned_low_sanity) {
+      this.gameState = { ...s, game: { ...s.game, flags: { ...s.game.flags, ai_warned_low_sanity: true } } };
+      this.addEvent(
+        'Child AI: "Your sanity is a candle in a wind that knows your name. Steady."'
+      );
+    } else if (this.gameState.player.health < 30 && !this.gameState.game.flags.ai_warned_low_health) {
+      this.gameState = {
+        ...this.gameState,
+        game: {
+          ...this.gameState.game,
+          flags: { ...this.gameState.game.flags, ai_warned_low_health: true },
+        },
+      };
+      this.addEvent('Child AI: "You are hurt. Find tonic or find cover — the void does not wait."');
+    }
   }
 
   addEvent(message) {
@@ -136,6 +171,12 @@ class VoidshatterEcho {
         randomEventMessages: this.content.dialogue.randomEvents,
       });
       if (this.gameState.game.phase === PHASES.PLAYING) {
+        this.gameState = onZoneTick(
+          this.gameState,
+          this.content,
+          this.arrivalRng(`tick_${this.gameState.game.time}`)
+        );
+        this.warnAiThresholds();
         this.saveGame(false);
       }
       this.render();
@@ -163,6 +204,7 @@ class VoidshatterEcho {
     );
     this.gameState = result.state;
     if (result.moved) {
+      this.applyArrivalBeats();
       this.saveGame(false);
     }
     this.render();
@@ -180,7 +222,10 @@ class VoidshatterEcho {
 
   restartRun() {
     this.gameState = restartRun(this.content.balance);
+    this.rng = mulberry32(this.gameState.game.seed);
+    this.ctx.rng = this.rng;
     this.clearSave();
+    this.applyArrivalBeats();
     this.addEvent("A new run begins at the Void Entrance.");
     this.render();
   }

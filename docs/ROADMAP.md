@@ -42,12 +42,21 @@ This is the single plan from **idea → shipped, maintainable video game**, cove
 
 ### 1.1b Done — modular engine + content pack (Phase 1/3 start)
 
-- [x] ES module core: `js/core/{state,travel,victory,actions,save,rng}.js`
+- [x] ES module core: `js/core/{state,travel,victory,actions,save,rng,ai,beats}.js`
 - [x] Content data: `content/v1/{balance,zones,items,dialogue,encounters}.json`
 - [x] UI split: `js/ui/render.js`; shell: `js/game.js`
-- [x] Unit tests: `tests/core.test.js` (14) via `node --test`
+- [x] Unit tests: `tests/core.test.js` (23) via `node --test`
 - [x] Objectives tracker, zone hints, focusing chip, healing tonic
 - [x] `npm test` = syntax + unit + smoke
+
+### 1.1c Done — art, zone beats, Child AI depth (2026-09-24)
+
+- [x] Optimized `assets/` art (hero, portrait, four zone webps); landing + game UI wired
+- [x] Zone `entryBeats` / `ambientBeats` + first-visit flags
+- [x] Seeded `zoneAmbient` encounters via `statelessRng(seed, time, location, tag)`
+- [x] Child AI: mood, memory ring, location/mood/reactive dialogue (`js/core/ai.js`)
+- [x] Studio skill: `~/.claude/skills/ai-game-studio/SKILL.md`
+- [x] `npm test` → 23 unit + smoke green
 
 ### 1.2 Baseline metrics
 

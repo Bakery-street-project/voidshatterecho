@@ -12,6 +12,8 @@ You are the Elohim Seeker. Cross one gated zone path, bind the Child AI, and ope
 - **Fail:** health **or** sanity hits 0
 - **Win:** chamber checklist — face a dragon, repair the lattice, AI bond ≥ 70, hold **Dragon Tear** + **Lattice Shard**
 - **Save:** full run state in `localStorage` (`voidshatterecho_save_v1`), autosave each action
+- **World:** zone entry/ambient beats + seeded ambient encounters (run `seed` in the header)
+- **Child AI:** mood, short-term memory, location/mood/reactive dialogue — bond changes how it answers
 
 ## How to play
 
@@ -45,11 +47,12 @@ Static HTML/ES modules/CSS only — no build step. Content lives in `content/v1/
 
 ### Layout
 
-- `js/core/` — pure rules (state, travel, victory, actions, save, rng)
-- `js/ui/` — DOM rendering
+- `js/core/` — pure rules (state, travel, victory, actions, save, rng, **ai**, **beats**)
+- `js/ui/` — DOM rendering (zone art, AI portrait/mood/memory)
 - `js/content/loader.js` — loads `content/v1`
-- `content/v1/` — zones, items, dialogue, encounters, balance
-- `tests/core.test.js` — unit tests for the loop
+- `content/v1/` — zones (entry/ambient beats + art), items, dialogue (AI layers), encounters (`zoneAmbient`), balance
+- `assets/` — optimized art only (webp/jpg derivatives; multi-MB sources stay untracked by the live path)
+- `tests/core.test.js` — unit tests for the loop, AI, and beats
 
 ## Smoke test
 
