@@ -1,0 +1,34 @@
+{
+  "dragon_battle": {
+    "id": "dragon_battle",
+    "name": "Dragon Duel",
+    "winMessage": "You defeated the dragon! It weeps golden tears.",
+    "loseMessage": "The dragon overwhelms you! You retreat, wounded.",
+    "grantsItemOnWin": "dragon_tear"
+  },
+  "tears_scavenge": {
+    "id": "tears_scavenge",
+    "name": "Tear Scavenge",
+    "message": "You gathered loose tears before the wyrm noticed."
+  },
+  "void_navigate": {
+    "id": "void_navigate",
+    "winMessage": "You successfully navigate the void and discover a new path.",
+    "loseMessage": "The void confuses you. You lose your way."
+  },
+  "lattice_repair": {
+    "id": "lattice_repair",
+    "name": "Lattice Repair",
+    "grantsItem": "lattice_shard",
+    "message": "You repair part of the lattice void. Reality stabilizes slightly."
+  },
+  "entrance_secrets": {
+    "id": "entrance_secrets",
+    "grantsItem": "void_key",
+    "message": "You pry a Void Key from the entrance glyphs. The east gate will answer."
+  },
+  "lattice_cache": {
+    "id": "lattice_cache",
+    "message": "Hidden cache recovered from a dead node."
+  }
+}

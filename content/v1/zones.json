@@ -1,0 +1,46 @@
+{
+  "zones": {
+    "void_entrance": {
+      "id": "void_entrance",
+      "name": "Void Entrance",
+      "description": "The gateway to the digital void where reality bends and breaks. Glyphs pulse underfoot like a heartbeat that is not yours.",
+      "actions": ["collect_gold", "talk_to_ai", "discover_secrets", "scavenge_tonic"],
+      "exits": { "north": null, "south": null, "east": "dragon_realm", "west": null },
+      "requiresExit": {},
+      "tutorial": "Use Discover Secrets to find the Void Key, then travel East."
+    },
+    "dragon_realm": {
+      "id": "dragon_realm",
+      "name": "Dragon Realm",
+      "description": "Ancient dragons weep golden tears in this corrupted digital realm. Heatless fire paints the canopy in magenta static.",
+      "actions": ["battle_dragon", "collect_tears", "upgrade_ai", "talk_to_ai"],
+      "exits": { "north": null, "south": null, "east": "lattice_void", "west": "void_entrance" },
+      "requiresExit": { "east": "void_key" },
+      "tutorial": "Battle or collect tears. Secure a Dragon Tear. Hold 50 gold to upgrade the Child AI."
+    },
+    "lattice_void": {
+      "id": "lattice_void",
+      "name": "Lattice Void",
+      "description": "Dimensional rifts scream with the sound of breaking reality. Broken code-rails hang like frozen lightning.",
+      "actions": ["navigate_void", "repair_lattice", "discover_secrets", "scavenge_tonic"],
+      "exits": { "north": null, "south": null, "east": "elohim_chamber", "west": "dragon_realm" },
+      "requiresExit": { "east": "boss_gate" },
+      "tutorial": "Earn 30 gold, Repair the lattice for the Lattice Shard, raise AI bond to 70."
+    },
+    "elohim_chamber": {
+      "id": "elohim_chamber",
+      "name": "Elohim Chamber",
+      "description": "The final challenge where you must claim אֵל נָצַח or burn. The air tastes of ozone and old covenants.",
+      "actions": ["face_elohim", "claim_victory", "sacrifice_ai", "talk_to_ai"],
+      "exits": { "north": null, "south": null, "east": null, "west": "lattice_void" },
+      "requiresExit": {},
+      "tutorial": "Confirm the checklist, then Claim Victory."
+    }
+  },
+  "travelLabels": {
+    "north": "↑ North",
+    "south": "↓ South",
+    "east": "→ East",
+    "west": "← West"
+  }
+}

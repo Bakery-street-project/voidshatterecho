@@ -17,8 +17,5 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Syntax check
-        run: node --check js/game.js
-
-      - name: DOM hook smoke
-        run: node scripts/smoke.js
+      - name: Syntax, unit, smoke
+        run: npm test

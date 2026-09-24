@@ -1,13 +1,17 @@
 {
   "name": "voidshatterecho",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Voidshatter Echo - A cyberpunk mythic horror RPG where dragons weep gold and lattice voids scream",
+  "type": "module",
   "main": "index.html",
   "scripts": {
     "start": "python -m http.server 8000",
     "dev": "python -m http.server 8000",
     "build": "echo 'No build process needed for static HTML/JS/CSS'",
-    "test": "node --check js/game.js && node scripts/smoke.js",
+    "test": "npm run test:syntax && npm run test:unit && npm run test:smoke",
+    "test:syntax": "node --check js/game.js && node --check js/core/state.js && node --check js/core/actions.js && node --check js/core/travel.js && node --check js/core/victory.js && node --check js/core/save.js && node --check js/core/rng.js && node --check js/ui/render.js && node --check js/content/loader.js",
+    "test:unit": "node --test tests/core.test.js",
+    "test:smoke": "node scripts/smoke.js",
     "deploy": "gh-pages -d ."
   },
   "keywords": [
@@ -36,6 +40,6 @@
     "gh-pages": "^6.3.0"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   }
 }

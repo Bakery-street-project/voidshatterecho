@@ -41,7 +41,15 @@ npm start
 # open http://localhost:8000/game.html
 ```
 
-Static HTML/JS/CSS only — no build step.
+Static HTML/ES modules/CSS only — no build step. Content lives in `content/v1/*.json`.
+
+### Layout
+
+- `js/core/` — pure rules (state, travel, victory, actions, save, rng)
+- `js/ui/` — DOM rendering
+- `js/content/loader.js` — loads `content/v1`
+- `content/v1/` — zones, items, dialogue, encounters, balance
+- `tests/core.test.js` — unit tests for the loop
 
 ## Smoke test
 
@@ -49,7 +57,7 @@ Static HTML/JS/CSS only — no build step.
 npm test
 ```
 
-Runs `node --check` on the engine and asserts required DOM/action hooks.
+Runs syntax checks, unit tests (`node --test`), and DOM/content smoke.
 
 ## Out of scope (v1)
 

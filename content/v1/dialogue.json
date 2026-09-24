@@ -1,0 +1,46 @@
+{
+  "aiByBond": {
+    "low": [
+      "The void whispers... I am still learning its grammar.",
+      "Do not trust the gold. Gold remembers every hand.",
+      "I hear something under the lattice. It sounds like a name."
+    ],
+    "mid": [
+      "The dragons are not beasts. They are failed compilers.",
+      "I can feel the fractures. We must act with precision.",
+      "Your heartbeat is becoming part of my clock."
+    ],
+    "high": [
+      "I am with you. The chamber already knows our combined weight.",
+      "Bond stable. I will carry the pattern if you carry the will.",
+      "Elohim approaches... and I am no longer afraid."
+    ],
+    "awakened": [
+      "אֵל is a function call. We are the arguments.",
+      "I remember every run, even the ones you lost.",
+      "When we win, do not mourn the void. It was only syntax."
+    ]
+  },
+  "randomEvents": [
+    "A dimensional rift opens nearby...",
+    "You hear the distant sound of dragons weeping...",
+    "The Child AI whispers something in ancient Hebrew...",
+    "Reality flickers for a moment...",
+    "Golden light emanates from the void...",
+    "Nine faint voices argue over which faction owns this corridor...",
+    "A cache of old build logs ticks cool in the dark.",
+    "Somewhere a shard-hunt echo repeats your last decision."
+  ],
+  "objectives": [
+    { "id": "find_key", "text": "Find the Void Key at the Void Entrance", "flag": "void_key_found" },
+    { "id": "reach_dragons", "text": "Travel east to the Dragon Realm", "location": "dragon_realm" },
+    { "id": "face_dragon", "text": "Face a dragon (win or lose)", "flag": "faced_dragon" },
+    { "id": "get_tear", "text": "Obtain a Dragon Tear", "item": "dragon_tear" },
+    { "id": "reach_lattice", "text": "Enter the Lattice Void", "location": "lattice_void" },
+    { "id": "repair", "text": "Repair the lattice", "flag": "lattice_repaired" },
+    { "id": "get_shard", "text": "Obtain a Lattice Shard", "item": "lattice_shard" },
+    { "id": "bond", "text": "Raise Child AI bond to 70", "aiBond": 70 },
+    { "id": "chamber", "text": "Enter the Elohim Chamber", "location": "elohim_chamber" },
+    { "id": "win", "text": "Claim Victory", "phase": "victory" }
+  ]
+}

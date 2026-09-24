@@ -1,0 +1,35 @@
+{
+  "void_key": {
+    "id": "void_key",
+    "name": "Void Key",
+    "description": "Opens the east lattice gate from the Dragon Realm.",
+    "emoji": "🗝️"
+  },
+  "dragon_tear": {
+    "id": "dragon_tear",
+    "name": "Dragon Tear",
+    "description": "Weeping gold from a fallen wyrm. Counts toward victory.",
+    "emoji": "💧"
+  },
+  "lattice_shard": {
+    "id": "lattice_shard",
+    "name": "Lattice Shard",
+    "description": "A stable fragment of repaired reality. Counts toward victory.",
+    "emoji": "💠"
+  },
+  "focusing_chip": {
+    "id": "focusing_chip",
+    "name": "Focusing Chip",
+    "description": "Stabilizes sanity on void navigation. Passive: −5 sanity loss on failed navigate.",
+    "emoji": "🧩",
+    "passive": "navigate_fail_sanity_mod"
+  },
+  "healing_tonic": {
+    "id": "healing_tonic",
+    "name": "Healing Tonic",
+    "description": "Single-use: restore 30 health.",
+    "emoji": "🧪",
+    "consumable": true,
+    "effect": { "health": 30 }
+  }
+}

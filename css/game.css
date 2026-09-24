@@ -375,3 +375,44 @@
     background: #ffd700;
     color: #1a0d2b;
 }
+
+.zone-hint {
+    margin-top: 8px;
+    color: rgba(0, 255, 255, 0.85) !important;
+    font-size: 0.85rem;
+}
+
+.objectives {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(0, 255, 255, 0.06);
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.objectives h4 {
+    color: #00ffff;
+    margin-bottom: 10px;
+}
+
+.objectives ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px 0;
+}
+
+.objectives li {
+    color: #ff6b6b;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+.objectives li.done {
+    color: #ffd700;
+}
+
+.objective-active {
+    color: #00ffff;
+    font-size: 0.85rem;
+    margin: 0;
+}

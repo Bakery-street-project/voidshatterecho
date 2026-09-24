@@ -40,6 +40,15 @@ This is the single plan from **idea → shipped, maintainable video game**, cove
 - [x] Commit `132f653` pushed to `main`
 - [x] GitHub Pages **enabled and built** (legacy Pages from `main` `/`)
 
+### 1.1b Done — modular engine + content pack (Phase 1/3 start)
+
+- [x] ES module core: `js/core/{state,travel,victory,actions,save,rng}.js`
+- [x] Content data: `content/v1/{balance,zones,items,dialogue,encounters}.json`
+- [x] UI split: `js/ui/render.js`; shell: `js/game.js`
+- [x] Unit tests: `tests/core.test.js` (14) via `node --test`
+- [x] Objectives tracker, zone hints, focusing chip, healing tonic
+- [x] `npm test` = syntax + unit + smoke
+
 ### 1.2 Baseline metrics
 
 | Signal | Value |
