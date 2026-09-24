@@ -8,7 +8,13 @@ import { createDefaultState, PHASES, tick, grantItem, hasItem, addEvent } from "
 import { bossGateMissing, claimVictory, isBossGateOpen } from "../js/core/victory.js";
 import { travel, meetsExitRequirement, canExit } from "../js/core/travel.js";
 import { performAction, KNOWN_ACTIONS } from "../js/core/actions.js";
-import { parseSave, serializeState, SAVE_VERSION } from "../js/core/save.js";
+import {
+  parseSave,
+  serializeState,
+  migrateSaveData,
+  SAVE_VERSION,
+  SAVE_MIGRATIONS,
+} from "../js/core/save.js";
 import { mulberry32, randomInt, chance, pick, statelessRng, hashParts } from "../js/core/rng.js";
 import { deriveMood, pickAiLine, remember, lastMemory } from "../js/core/ai.js";
 import { onZoneArrive, onZoneTick } from "../js/core/beats.js";
@@ -401,4 +407,22 @@ test("serialize drops confirm flag; parse rejects wrong version", () => {
   const payload = serializeState(s);
   assert.equal(payload.__confirmNewRun, undefined);
   assert.equal(parseSave(JSON.stringify(payload), () => createDefaultState(content.balance)) !== null, true);
+});
+
+test("save migration path rejects unknown versions and keeps v1", () => {
+  assert.equal(migrateSaveData(null), null);
+  assert.equal(migrateSaveData({ version: "1" }), null);
+  assert.equal(migrateSaveData({ version: 0, player: {}, game: {} }), null);
+  assert.equal(migrateSaveData({ version: SAVE_VERSION + 1, player: {}, game: {} }), null);
+  assert.equal(Object.isFrozen(SAVE_MIGRATIONS), true);
+
+  const v1 = {
+    version: 1,
+    player: { location: "dragon_realm", gold: 5 },
+    game: { phase: "playing", inventory: [], flags: {}, events: [] },
+  };
+  const migrated = migrateSaveData(v1);
+  assert.equal(migrated.version, SAVE_VERSION);
+  assert.equal(migrated.player.gold, 5);
+  assert.equal(parseSave(JSON.stringify(v1), () => createDefaultState(content.balance)) !== null, true);
 });

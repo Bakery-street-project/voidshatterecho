@@ -1,0 +1,43 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "encounter_reward_vs_fail": {
+      "type": "choice",
+      "choice": "keep_v1_curve",
+      "confidence": 0.25,
+      "probabilities": {
+        "soften_fail_costs": 0.34,
+        "raise_rewards": 0.07,
+        "raise_risk": 0.01,
+        "add_retry_cushion": 0.18,
+        "keep_v1_curve": 0.4
+      }
+    },
+    "status_effects_v1_1": {
+      "type": "choice",
+      "choice": "defer_to_phase6",
+      "confidence": 0.58,
+      "probabilities": {
+        "v1_0_hot_add": 0.01,
+        "defer_to_phase6": 0.69,
+        "v1_1_corruption_only": 0.19,
+        "v1_1_pair": 0.11
+      }
+    },
+    "elohim_content_pack": {
+      "type": "choice",
+      "choice": "stay_original",
+      "confidence": 0.57,
+      "probabilities": {
+        "flavor_only": 0.26,
+        "full_quest_ribbon": 0.0,
+        "stay_original": 0.68,
+        "defer_until_license": 0.06
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 1244,
+    "output_tokens": 204
+  }
+}

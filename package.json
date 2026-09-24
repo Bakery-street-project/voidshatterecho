@@ -8,11 +8,15 @@
     "start": "python -m http.server 8000",
     "dev": "python -m http.server 8000",
     "build": "echo 'No build process needed for static HTML/JS/CSS'",
-    "test": "npm run test:syntax && npm run test:unit && npm run test:smoke",
-    "test:syntax": "node --check js/game.js && node --check js/core/state.js && node --check js/core/actions.js && node --check js/core/travel.js && node --check js/core/victory.js && node --check js/core/save.js && node --check js/core/rng.js && node --check js/core/ai.js && node --check js/core/beats.js && node --check js/core/analytics.js && node --check js/ui/render.js && node --check js/content/loader.js && node --check e2e/run.mjs",
+    "test": "npm run test:syntax && npm run test:unit && npm run test:smoke && npm run test:content && npm run test:security",
+    "test:syntax": "node --check js/game.js && node --check js/core/state.js && node --check js/core/actions.js && node --check js/core/travel.js && node --check js/core/victory.js && node --check js/core/save.js && node --check js/core/rng.js && node --check js/core/ai.js && node --check js/core/beats.js && node --check js/core/analytics.js && node --check js/ui/render.js && node --check js/content/loader.js && node --check e2e/run.mjs && node --check scripts/check-content.js && node --check scripts/balance-sim.js && node --check scripts/security-scan.js",
     "test:unit": "node --test tests/core.test.js",
     "test:smoke": "node scripts/smoke.js",
+    "test:content": "node scripts/check-content.js",
+    "test:security": "node scripts/security-scan.js",
     "test:e2e": "node e2e/run.mjs",
+    "test:balance": "node scripts/balance-sim.js",
+    "hooks": "git config core.hooksPath .githooks",
     "deploy": "gh-pages -d ."
   },
   "keywords": [

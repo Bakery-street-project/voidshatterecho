@@ -77,6 +77,10 @@ const requiredContent = [
   ".github/ISSUE_TEMPLATE/balance.md",
   ".github/ISSUE_TEMPLATE/crash.md",
   ".github/ISSUE_TEMPLATE/save-corrupt.md",
+  "scripts/check-content.js",
+  "scripts/balance-sim.js",
+  "scripts/security-scan.js",
+  ".githooks/pre-push",
 ];
 for (const file of requiredContent) {
   assert.ok(exists(file), `missing ${file}`);
@@ -186,5 +190,37 @@ const renderUx = read("js/ui/render.js");
 assert.ok(renderUx.includes("data-pause"), "missing pause hook");
 assert.ok(renderUx.includes("data-export-save"), "missing export hook");
 assert.ok(renderUx.includes("data-import-save"), "missing import hook");
+
+const saveSrcFull = read("js/core/save.js");
+assert.ok(saveSrcFull.includes("migrateSaveData"), "save must expose migration path");
+assert.ok(saveSrcFull.includes("SAVE_MIGRATIONS"), "save must define migration table");
+
+const ciYml = read(".github/workflows/ci.yml");
+assert.ok(ciYml.includes("code-quality"), "CI must provide code-quality check name");
+assert.ok(ciYml.includes("security-scan"), "CI must provide security-scan check name");
+
+const howToWin = [
+  "Discover Secrets",
+  "Void Key",
+  "Dragon",
+  "Repair",
+  "bond",
+  "Victory",
+];
+for (const token of howToWin) {
+  assert.ok(read("README.md").includes(token), `README How to play missing: ${token}`);
+}
+
+// Game JS budget: raw under 150 KB (gzip asserted in CI; keep local slack)
+let jsBytes = 0;
+function walkJs(dir) {
+  for (const name of readdirSync(dir)) {
+    const full = join(dir, name);
+    if (statSync(full).isDirectory()) walkJs(full);
+    else if (name.endsWith(".js")) jsBytes += statSync(full).size;
+  }
+}
+walkJs(join(root, "js"));
+assert.ok(jsBytes < 150 * 1024, `game JS too large: ${jsBytes} bytes`);
 
 console.log("smoke ok");

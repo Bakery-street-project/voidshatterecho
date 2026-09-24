@@ -3,6 +3,29 @@
 export const SAVE_KEY = "voidshatterecho_save_v1";
 export const SAVE_VERSION = 1;
 
+/**
+ * Versioned migrations toward SAVE_VERSION.
+ * When bumping SAVE_VERSION to 2, add `1: (data) => ({ ...data, version: 2, ... })`
+ * and a unit test that a serialized v1 payload upgrades cleanly.
+ */
+export const SAVE_MIGRATIONS = Object.freeze({});
+
+/** Upgrade a raw save payload to SAVE_VERSION, or return null if impossible. */
+export function migrateSaveData(data) {
+  if (!data || typeof data.version !== "number" || !Number.isInteger(data.version)) {
+    return null;
+  }
+  if (data.version > SAVE_VERSION) return null;
+  let current = data;
+  while (current.version < SAVE_VERSION) {
+    const step = SAVE_MIGRATIONS[current.version];
+    if (typeof step !== "function") return null;
+    current = step(current);
+    if (!current || current.version <= data.version) return null;
+  }
+  return current.version === SAVE_VERSION ? current : null;
+}
+
 export function serializeState(state) {
   return {
     version: SAVE_VERSION,
@@ -36,8 +59,10 @@ export function parseSave(raw, defaultsFactory) {
   } catch {
     return null;
   }
-  if (!data || data.version !== SAVE_VERSION) return null;
-  if (!data.player || !data.game) return null;
+  const migrated = migrateSaveData(data);
+  if (!migrated) return null;
+  if (!migrated.player || !migrated.game) return null;
+  data = migrated;
 
   const base = defaultsFactory();
   const aiMemory = Array.isArray(data.ai?.memory)
@@ -62,3 +87,5 @@ export function parseSave(raw, defaultsFactory) {
     meta: { version: SAVE_VERSION, savedAt: data.savedAt || null },
   };
 }
+
+export { migrateSaveData as migrateSave };

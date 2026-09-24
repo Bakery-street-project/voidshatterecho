@@ -1,0 +1,63 @@
+{
+  "state": {
+    "task": "Phase 1 content-depth gates for Voidshatter Echo (Bakery-street-project/voidshatterecho). Static HTML/ES-module cyberpunk RPG, pure core + content/v1 JSON, live at https://bakery-street-project.github.io/voidshatterecho/. npm test (syntax+26 unit+smoke+content schema+security) and Playwright e2e green. Balance bot (scripts/balance-sim.js) wins ~100% of 80 seeds — bot too optimal; human win-rate still unknown.",
+    "engine": {
+      "zones": ["void_entrance", "dragon_realm", "lattice_void", "elohim_chamber"],
+      "gates": ["void_key east", "boss_gate checklist"],
+      "win": ["faced_dragon", "lattice_repaired", "ai_bond>=70", "dragon_tear", "lattice_shard"],
+      "fail": ["health<=0", "sanity<=0"],
+      "ambient": "zoneAmbient weighted tables with gold/sanity/health/bond/xp deltas",
+      "rng": "mulberry32 + statelessRng(seed, time, location, tag)"
+    },
+    "balance_knobs": {
+      "repairLatticeGold": 30,
+      "aiBondWinThreshold": 70,
+      "talkBondGain": 5,
+      "battleLoseHealth": 20,
+      "navigateFailSanity": 15,
+      "navigateSuccessChance": 0.7,
+      "upgradeAiGold": 50,
+      "tickSeconds": 1
+    },
+    "constraints": [
+      "v1 finishable ~10-15 minutes",
+      "content as data in content/v1 only",
+      "no NFT/multiplayer/backend until Phase 4+",
+      "operator wants Jev batches persisted under docs/jev/",
+      "status effects and Elohim content pack are optional Phase 1 decisions"
+    ]
+  },
+  "questions": {
+    "encounter_reward_vs_fail": {
+      "type": "choice",
+      "instructions": "Given ambient deltas (typically ±3–18 gold/sanity/bond, occasional −5 health) and action fail costs, is the current reward curve balanced against fail risk for M1 targets (median 8–12 min, first-time win 35–50% after one loss)?",
+      "criteria": {
+        "keep_v1_curve": "Ship as-is; tune only after 10 human playtests",
+        "soften_fail_costs": "Lower battleLoseHealth / navigateFailSanity to raise first-time win rate",
+        "raise_rewards": "Increase ambient gold/tear yields so repair+bond are less grindy",
+        "raise_risk": "Increase ambient negative deltas or tick pressure for more tension",
+        "add_retry_cushion": "Keep costs but add a soft checkpoint / partial gold retain on death"
+      }
+    },
+    "status_effects_v1_1": {
+      "type": "choice",
+      "instructions": "Should corruption/static status effects ship in v1.1 or stay deferred?",
+      "criteria": {
+        "defer_to_phase6": "No status effects until campaign systems; keep vitals binary",
+        "v1_1_corruption_only": "One stackable corruption that only drains sanity",
+        "v1_1_pair": "Corruption + static (heal block or action lock) with JSON-driven rules",
+        "v1_0_hot_add": "Retrofit status effects immediately before public HN push"
+      }
+    },
+    "elohim_content_pack": {
+      "type": "choice",
+      "instructions": "Import Elohim Shards quest ribbon / voices as content pack vs stay original for Phase 1?",
+      "criteria": {
+        "stay_original": "Keep Voidshatter original voice; no external lore pack yet",
+        "flavor_only": "Optional side notes / random events with CC BY 4.0 attribution; not main quest",
+        "full_quest_ribbon": "Replace main objectives with Elohim quest_graph.json as primary spine",
+        "defer_until_license": "Wait for B2 license decision + clear owner before any import"
+      }
+    }
+  }
+}

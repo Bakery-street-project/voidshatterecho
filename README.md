@@ -32,7 +32,8 @@ You are the Elohim Seeker. Cross one gated zone path, bind the Child AI, and ope
 | Enter | Talk to Child AI |
 | K | Manual save |
 | Space | Interact prompt |
-| Buttons | Actions, travel, restart |
+| P / Escape | Pause / resume |
+| Buttons | Actions, pause, export/import save, restart |
 
 ## Local run
 
@@ -41,6 +42,15 @@ git clone https://github.com/Bakery-street-project/voidshatterecho.git
 cd voidshatterecho
 npm start
 # open http://localhost:8000/game.html
+```
+
+Optional local CI gate while GitHub Actions billing is locked:
+
+```bash
+npm run hooks   # git config core.hooksPath .githooks → pre-push runs npm test
+npm test        # syntax + unit + smoke + content schema + security scan
+npm run test:e2e
+npm run test:balance
 ```
 
 Static HTML/ES modules/CSS only — no build step. Content lives in `content/v1/*.json`.
@@ -53,9 +63,10 @@ Static HTML/ES modules/CSS only — no build step. Content lives in `content/v1/
 - `content/v1/` — zones (entry/ambient beats + art), items, dialogue (AI layers), encounters (`zoneAmbient`), balance
 - `assets/` — optimized art only (webp/jpg derivatives; multi-MB sources stay untracked by the live path)
 - `css/tokens.css` + `css/game.css` — shared design tokens
-- `tests/core.test.js` — unit tests for the loop, AI, beats, analytics
+- `scripts/` — smoke, content schema, security scan, balance bot
+- `tests/core.test.js` — unit tests for the loop, AI, beats, analytics, save migration
 - `e2e/run.mjs` — Playwright boot/key/fail/restart/save suite (`npm run test:e2e`)
-- `docs/PLAYTEST.md` · `docs/DESIGN.md` · `docs/launch/hn.md`
+- `docs/PLAYTEST.md` · `docs/DESIGN.md` · `docs/launch/hn.md` · `docs/jev/`
 
 ## Smoke test
 
@@ -63,7 +74,7 @@ Static HTML/ES modules/CSS only — no build step. Content lives in `content/v1/
 npm test
 ```
 
-Runs syntax checks, unit tests (`node --test`), and DOM/content smoke.
+Runs syntax checks, unit tests (`node --test`), DOM/content smoke, content schema, and secret/ESM hygiene scan.
 
 ## Out of scope (v1)
 

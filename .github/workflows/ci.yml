@@ -1,4 +1,4 @@
-name: Smoke
+name: CI
 
 on:
   push:
@@ -7,7 +7,9 @@ on:
     branches: [main, master]
 
 jobs:
-  smoke:
+  # Names match expected branch-protection contexts (replaces aspirational labels).
+  code-quality:
+    name: code-quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,5 +19,25 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Syntax, unit, smoke
+      - name: Syntax, unit, smoke, content schema
         run: npm test
+
+      - name: Game JS gzip budget (<150 KB)
+        run: |
+          bytes=$(find js -name '*.js' -exec cat {} + | gzip -9 | wc -c)
+          echo "game JS gzipped: ${bytes} bytes"
+          test "$bytes" -lt 153600
+
+  security-scan:
+    name: security-scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Secret-pattern + ESM hygiene scan
+        run: node scripts/security-scan.js

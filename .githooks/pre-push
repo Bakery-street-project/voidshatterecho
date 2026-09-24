@@ -1,0 +1,6 @@
+#!/bin/sh
+# Local pre-push gate while GitHub Actions billing is locked (B1).
+# Enable once: git config core.hooksPath .githooks
+set -e
+echo "pre-push: npm test"
+npm test
