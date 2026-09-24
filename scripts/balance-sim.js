@@ -28,6 +28,7 @@ const items = readJson("content/v1/items.json");
 const content = {
   balance: balancePkg.balance,
   winGate: balancePkg.winGate,
+  sacrificeGate: balancePkg.sacrificeGate ?? null,
   zones: zonesPkg.zones,
   dialogue,
   encounters,
@@ -39,6 +40,7 @@ function makeCtx(seed) {
   return {
     balance: content.balance,
     winGate: content.winGate,
+    sacrificeGate: content.sacrificeGate,
     dialogue,
     encounters,
     items,
@@ -68,7 +70,7 @@ function act(state, ctx, action) {
 }
 
 function moveTo(state, ctx, direction) {
-  const result = travel(state, content.zones, direction, content.winGate);
+  const result = travel(state, content.zones, direction, content.winGate, content.sacrificeGate);
   if (!result.moved) return state;
   let next = result.state;
   next = onZoneArrive(next, content, ctx.rng);
@@ -193,7 +195,7 @@ function playRun(seed) {
     }
     step(() => raiseBond(s, ctx));
 
-    const gateOk = isBossGateOpen(s, content.winGate);
+    const gateOk = isBossGateOpen(s, content.winGate, content.sacrificeGate);
     if (!gateOk && actions < maxActions + 20) {
       // last-ditch: more gold/tears path
       step(() => goldForRepair(s, ctx));

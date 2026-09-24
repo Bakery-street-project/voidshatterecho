@@ -21,6 +21,7 @@ assert.equal(typeof balancePkg.saveKey, "string", "balance.saveKey");
 assert.equal(typeof balancePkg.saveVersion, "number", "balance.saveVersion");
 assert.equal(typeof balancePkg.balance, "object", "balance.balance");
 assert.equal(typeof balancePkg.winGate, "object", "balance.winGate");
+assert.equal(typeof balancePkg.sacrificeGate, "object", "balance.sacrificeGate");
 
 const b = balancePkg.balance;
 const requiredBalanceKeys = [
@@ -49,6 +50,13 @@ const winGate = balancePkg.winGate;
 assert.ok(Array.isArray(winGate.requireItems), "winGate.requireItems");
 for (const itemId of winGate.requireItems) {
   assert.ok(items[itemId], `winGate item missing from items.json: ${itemId}`);
+}
+
+const sacrificeGate = balancePkg.sacrificeGate;
+assert.ok(Array.isArray(sacrificeGate.requireItems), "sacrificeGate.requireItems");
+assert.equal(sacrificeGate.requireAiSacrificed, true, "sacrificeGate.requireAiSacrificed");
+for (const itemId of sacrificeGate.requireItems) {
+  assert.ok(items[itemId], `sacrificeGate item missing from items.json: ${itemId}`);
 }
 
 const zones = zonesPkg.zones;

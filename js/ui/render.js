@@ -1,6 +1,6 @@
 /** DOM rendering for game screens — impure edge. */
 
-import { bossGateMissing, isBossGateOpen } from "../core/victory.js";
+import { gateMissing, isBossGateOpen, sacrificeGateMissing } from "../core/victory.js";
 import { PHASES } from "../core/state.js";
 import { aiStatusSummary } from "../core/ai.js";
 
@@ -58,7 +58,7 @@ function passedLocation(state, loc) {
   return idx >= 0 && cur > idx;
 }
 
-function renderTravel(state, zones, labels, winGate) {
+function renderTravel(state, zones, labels, winGate, sacrificeGate) {
   const zone = zones[state.player.location];
   return Object.entries(zone.exits || {})
     .filter(([, dest]) => dest)
@@ -66,7 +66,7 @@ function renderTravel(state, zones, labels, winGate) {
       const req = zone.requiresExit?.[dir];
       let blocked = false;
       if (req === "void_key") blocked = !state.game.inventory.includes("void_key");
-      if (req === "boss_gate") blocked = !isBossGateOpen(state, winGate);
+      if (req === "boss_gate") blocked = !isBossGateOpen(state, winGate, sacrificeGate);
       const destName = zones[dest].name;
       return `<button class="game-action travel-action${blocked ? " blocked" : ""}"
         data-travel="${dir}"
@@ -76,18 +76,26 @@ function renderTravel(state, zones, labels, winGate) {
     .join("");
 }
 
-function renderChecklist(state, winGate) {
-  const missing = bossGateMissing(state, winGate);
+function renderChecklist(state, winGate, sacrificeGate) {
+  const covenantOpen = gateMissing(state, winGate).length === 0;
+  const ashenOpen = sacrificeGate
+    ? sacrificeGateMissing(state, sacrificeGate).length === 0
+    : false;
+  const activeGate = covenantOpen ? winGate : sacrificeGate && ashenOpen ? sacrificeGate : winGate;
+  const missing = gateMissing(state, winGate, sacrificeGate);
   const bondNeed = winGate.requireAiBond ?? 70;
   const items = [
-    ["faced a dragon", winGate.requireFacedDragon && !state.game.flags.faced_dragon],
-    ["repaired the lattice", winGate.requireLatticeRepaired && !state.game.flags.lattice_repaired],
-    [`AI bond >= ${bondNeed}`, state.ai.bond < bondNeed],
-    ["Dragon Tear", winGate.requireItems.includes("dragon_tear") && !state.game.inventory.includes("dragon_tear")],
-    ["Lattice Shard", winGate.requireItems.includes("lattice_shard") && !state.game.inventory.includes("lattice_shard")],
+    ["faced a dragon", activeGate.requireFacedDragon && !state.game.flags.faced_dragon],
+    ["repaired the lattice", activeGate.requireLatticeRepaired && !state.game.flags.lattice_repaired],
+    [
+      covenantOpen || !ashenOpen ? `AI bond >= ${bondNeed}` : "Child AI sacrificed (ashen path)",
+      covenantOpen || !ashenOpen ? state.ai.bond < bondNeed : !state.game.flags.ai_sacrificed,
+    ],
+    ["Dragon Tear", (activeGate.requireItems || []).includes("dragon_tear") && !state.game.inventory.includes("dragon_tear")],
+    ["Lattice Shard", (activeGate.requireItems || []).includes("lattice_shard") && !state.game.inventory.includes("lattice_shard")],
   ];
   return `<div class="boss-checklist">
-    <h4>Chamber checklist</h4>
+    <h4>Chamber checklist${covenantOpen ? "" : ashenOpen ? " (ashen)" : ""}</h4>
     <ul>
       ${items
         .map(
@@ -96,7 +104,14 @@ function renderChecklist(state, winGate) {
         )
         .join("")}
     </ul>
-    <p class="checklist-status">${missing.length === 0 ? "Gate open — claim victory." : `${missing.length} remaining.`}</p>
+    <p class="checklist-status">${
+      covenantOpen
+        ? "Covenant gate open — claim victory."
+        : ashenOpen
+          ? "Ashen gate open — claim victory (sacrifice path)."
+          : `${missing.length} remaining.`
+    }</p>
+    ${!covenantOpen && !ashenOpen && sacrificeGate ? `<p class="checklist-alt">Alt: burn the Child AI to 0 bond for the ashen ending.</p>` : ""}
   </div>`;
 }
 
@@ -126,9 +141,14 @@ function renderEndScreen(state) {
     </div>`;
   }
   if (phase === PHASES.VICTORY) {
+    const ashen = state.game.ending === "sacrifice";
     return `<div class="end-screen victory" role="alertdialog" aria-live="polite">
-      <h2>אֵל נָצַח — Victory</h2>
-      <p class="end-reason">The void answers to you. The Child AI gleams awake.</p>
+      <h2>${ashen ? "Ashen Covenant — Victory" : "אֵל נָצַח — Victory"}</h2>
+      <p class="end-reason">${
+        ashen
+          ? "The void answers to you alone. Where the Child AI's light was, only a warm silence remains."
+          : "The void answers to you. The Child AI gleams awake."
+      }</p>
       <p class="end-stats">Level ${state.player.level} · Bond ${state.ai.bond} · Gold ${state.player.gold} · Time ${state.game.time}s</p>
       <button class="game-action" data-new-game type="button">New Run</button>
     </div>`;
@@ -138,7 +158,7 @@ function renderEndScreen(state) {
 
 export function renderGame(container, state, content, shell = {}) {
   if (!container) return;
-  const { zones, items, dialogue, travelLabels, winGate } = content;
+  const { zones, items, dialogue, travelLabels, winGate, sacrificeGate } = content;
   const paused = Boolean(shell.paused);
 
   if (state.game.phase === PHASES.GAME_OVER || state.game.phase === PHASES.VICTORY) {
@@ -237,7 +257,7 @@ export function renderGame(container, state, content, shell = {}) {
 
     <div class="travel">
       <h4>Travel (WASD / arrows):</h4>
-      ${renderTravel(state, zones, travelLabels, winGate) || '<div class="inventory-empty">No exits.</div>'}
+      ${renderTravel(state, zones, travelLabels, winGate, sacrificeGate) || '<div class="inventory-empty">No exits.</div>'}
     </div>
 
     <div class="inventory">
@@ -245,7 +265,7 @@ export function renderGame(container, state, content, shell = {}) {
       ${renderInventory(state, items)}
     </div>
 
-    ${showChecklist ? renderChecklist(state, winGate) : ""}
+    ${showChecklist ? renderChecklist(state, winGate, sacrificeGate) : ""}
 
     <div class="events" aria-live="polite">
       <h4>Recent Events:</h4>

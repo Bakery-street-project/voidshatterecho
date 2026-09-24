@@ -40,6 +40,7 @@ export function serializeState(state) {
         state.game.phase === "game_over" || state.game.phase === "victory"
           ? "playing"
           : state.game.phase,
+      ending: state.game.ending ?? null,
       time: state.game.time,
       events: state.game.events.map((e) => ({ ...e })),
       inventory: [...state.game.inventory],
@@ -75,6 +76,7 @@ export function parseSave(raw, defaultsFactory) {
       ...base.game,
       ...data.game,
       phase: data.game.phase === "game_over" || data.game.phase === "victory" ? "playing" : data.game.phase || "playing",
+      ending: typeof data.game.ending === "string" ? data.game.ending : null,
       flags: { ...base.game.flags, ...(data.game.flags || {}) },
       consumed: { ...base.game.consumed, ...(data.game.consumed || {}) },
       inventory: Array.isArray(data.game.inventory) ? [...data.game.inventory] : [],

@@ -49,5 +49,11 @@
     "requireLatticeRepaired": true,
     "requireAiBond": 70,
     "requireItems": ["dragon_tear", "lattice_shard"]
+  },
+  "sacrificeGate": {
+    "requireFacedDragon": true,
+    "requireLatticeRepaired": true,
+    "requireAiSacrificed": true,
+    "requireItems": ["dragon_tear", "lattice_shard"]
   }
 }

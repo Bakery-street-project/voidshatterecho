@@ -35,6 +35,7 @@ class VoidshatterEcho {
     this.ctx = {
       balance: content.balance,
       winGate: content.winGate,
+      sacrificeGate: content.sacrificeGate ?? null,
       dialogue: content.dialogue,
       encounters: content.encounters,
       items: content.items,
@@ -333,7 +334,8 @@ class VoidshatterEcho {
       this.gameState,
       this.content.zones,
       direction,
-      this.content.winGate
+      this.content.winGate,
+      this.content.sacrificeGate ?? null
     );
     this.gameState = { ...result.state, __confirmNewRun: false };
     if (result.moved) {

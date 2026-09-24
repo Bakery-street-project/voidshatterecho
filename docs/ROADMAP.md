@@ -82,6 +82,14 @@ This is the single plan from **idea → shipped, maintainable video game**, cove
 - [x] Live URL 200 on `/`, `/game.html`, `/js/game.js` (checked 2026-09-24)
 - [x] Game JS budget: raw &lt; 150 KB asserted in smoke; gzip budget in CI
 
+### 1.1f Done — Phase 6 slice: second ending (2026-09-24)
+
+- [x] Dual win gates in `content/v1/balance.json`: `winGate` (covenant) + `sacrificeGate` (ashen, `requireAiSacrificed`)
+- [x] Pure `js/core/victory.js`: `sacrificeGateMissing`, `gateMissing`, dual `isBossGateOpen`; claim prefers covenant when both qualify
+- [x] `game.ending` = `"covenant" | "sacrifice"` — clone/serialize/parse + analytics `run_end.ending`
+- [x] UI: checklist shows ashen path + alt hint; victory screen differentiates “Ashen Covenant”
+- [x] 28 unit tests (ashen open/claim, no-sacrifice sear, covenant preferred) + smoke/content/security + e2e green
+
 ### 1.2 Baseline metrics
 
 | Signal | Value |

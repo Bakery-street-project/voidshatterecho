@@ -263,7 +263,7 @@ function face_elohim(state) {
 }
 
 function claim_victory(state, ctx) {
-  return claimVictory(state, ctx.winGate, ctx.balance);
+  return claimVictory(state, ctx.winGate, ctx.balance, ctx.sacrificeGate);
 }
 
 function sacrifice_ai(state, ctx) {

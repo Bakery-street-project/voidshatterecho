@@ -30,17 +30,27 @@ start (bond 50, gold 0)
   → east                      [gate: void_key already held]
   → gold ≥ 30 + repair_lattice [flag lattice_repaired, item lattice_shard]
   → bond ≥ 70                 [talk_to_ai ×N or upgrade_ai]
-  → east                      [gate: boss_gate = full checklist]
+  → east                      [gate: boss_gate = covenant OR ashen checklist]
   → face_elohim → claim_victory
 ```
 
-**Win checklist (all required):**
+**Covenant ending (primary):**
 
 1. `faced_dragon`
 2. `lattice_repaired`
 3. AI bond ≥ `winGate.requireAiBond` (70)
 4. Item `dragon_tear`
 5. Item `lattice_shard`
+
+**Ashen ending (sacrifice path):**
+
+1. `faced_dragon`
+2. `lattice_repaired`
+3. `ai_sacrificed` (bond burned to 0 via `sacrifice_ai`)
+4. Item `dragon_tear`
+5. Item `lattice_shard`
+
+Gates: `winGate` (covenant) and `sacrificeGate` (ashen) in `balance.json`. The chamber opens if **either** is complete; claim prefers covenant when both qualify. `game.ending` is `"covenant" | "sacrifice"` and is serialized + sent on `run_end`.
 
 Fail: `health ≤ 0` **or** `sanity ≤ 0` → `game_over`. Incomplete claim deals sear damage (`claimFailHealth` / `claimFailSanity`).
 

@@ -35,6 +35,7 @@ export function runEnd(state, outcome) {
   const fail = outcome !== "win";
   return buildEvent("run_end", {
     outcome: fail ? "fail" : "win",
+    ending: fail ? undefined : state.game.ending || "covenant",
     zone: state.player.location,
     time: state.game.time,
     level: state.player.level,

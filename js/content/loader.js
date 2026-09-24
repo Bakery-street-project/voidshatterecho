@@ -15,6 +15,7 @@ export async function loadContent(base = "content/v1") {
   return {
     balance: map.balance.balance,
     winGate: map.balance.winGate,
+    sacrificeGate: map.balance.sacrificeGate ?? null,
     saveKey: map.balance.saveKey,
     saveVersion: map.balance.saveVersion,
     zones: map.zones.zones,

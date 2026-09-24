@@ -27,6 +27,7 @@ export function createDefaultState(balance) {
     },
     game: {
       phase: PHASES.PLAYING,
+      ending: null,
       time: 0,
       events: [],
       inventory: [],
@@ -206,9 +207,10 @@ export function triggerGameOver(state, reason) {
   return next;
 }
 
-export function triggerVictory(state) {
+export function triggerVictory(state, ending = "covenant") {
   let next = cloneState(state);
   next.game.phase = PHASES.VICTORY;
+  next.game.ending = ending;
   return next;
 }
 

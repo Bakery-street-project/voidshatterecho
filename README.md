@@ -10,7 +10,7 @@ You are the Elohim Seeker. Cross one gated zone path, bind the Child AI, and ope
 
 - **Loop:** travel → actions → fail/win → restart
 - **Fail:** health **or** sanity hits 0
-- **Win:** chamber checklist — face a dragon, repair the lattice, AI bond ≥ 70, hold **Dragon Tear** + **Lattice Shard**
+- **Win (two endings):** **Covenant** — face a dragon, repair the lattice, AI bond ≥ 70, hold **Dragon Tear** + **Lattice Shard**; or **Ashen** — same except burn the Child AI's bond to 0 via Sacrifice AI
 - **Save:** full run state in `localStorage` (`voidshatterecho_save_v1`), autosave each action
 - **World:** zone entry/ambient beats + seeded ambient encounters (run `seed` in the header)
 - **Child AI:** mood, short-term memory, location/mood/reactive dialogue — bond changes how it answers

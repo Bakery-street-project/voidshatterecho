@@ -1,29 +1,29 @@
 /** Zone travel with gated exits — pure. */
 
 import { cloneState, addEvent, hasItem } from "./state.js";
-import { bossGateMissing, isBossGateOpen } from "./victory.js";
+import { gateMissing, isBossGateOpen } from "./victory.js";
 
 const DIRECTIONS = ["north", "south", "east", "west"];
 
-export function meetsExitRequirement(state, requirement, winGate) {
+export function meetsExitRequirement(state, requirement, winGate, sacrificeGate) {
   if (!requirement) return true;
   if (requirement === "void_key") return hasItem(state, "void_key");
-  if (requirement === "boss_gate") return isBossGateOpen(state, winGate);
+  if (requirement === "boss_gate") return isBossGateOpen(state, winGate, sacrificeGate);
   return true;
 }
 
-export function exitRequirementMessage(state, requirement, winGate) {
+export function exitRequirementMessage(state, requirement, winGate, sacrificeGate) {
   if (requirement === "void_key") {
     return "The east gate is sealed. You need the Void Key (search the entrance).";
   }
   if (requirement === "boss_gate") {
-    const missing = bossGateMissing(state, winGate);
+    const missing = gateMissing(state, winGate, sacrificeGate);
     return `The chamber rejects you. Still missing: ${missing.join(", ")}.`;
   }
   return "The way is blocked.";
 }
 
-export function travel(state, zones, direction, winGate) {
+export function travel(state, zones, direction, winGate, sacrificeGate) {
   if (state.game.phase !== "playing") {
     return { state, moved: false, reason: "not_playing" };
   }
@@ -46,9 +46,9 @@ export function travel(state, zones, direction, winGate) {
   }
 
   const requirement = zone.requiresExit?.[direction];
-  if (!meetsExitRequirement(state, requirement, winGate)) {
+  if (!meetsExitRequirement(state, requirement, winGate, sacrificeGate)) {
     return {
-      state: addEvent(state, exitRequirementMessage(state, requirement, winGate)),
+      state: addEvent(state, exitRequirementMessage(state, requirement, winGate, sacrificeGate)),
       moved: false,
       reason: "locked",
     };
@@ -67,10 +67,10 @@ export function travel(state, zones, direction, winGate) {
   return { state: next, moved: true };
 }
 
-export function canExit(state, zones, direction, winGate) {
+export function canExit(state, zones, direction, winGate, sacrificeGate) {
   const zone = zones[state.player.location];
   if (!zone) return false;
   const target = zone.exits?.[direction];
   if (!target) return false;
-  return meetsExitRequirement(state, zone.requiresExit?.[direction], winGate);
+  return meetsExitRequirement(state, zone.requiresExit?.[direction], winGate, sacrificeGate);
 }

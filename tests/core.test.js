@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
 import { createDefaultState, PHASES, tick, grantItem, hasItem, addEvent } from "../js/core/state.js";
-import { bossGateMissing, claimVictory, isBossGateOpen } from "../js/core/victory.js";
+import { bossGateMissing, claimVictory, isBossGateOpen, sacrificeGateMissing } from "../js/core/victory.js";
 import { travel, meetsExitRequirement, canExit } from "../js/core/travel.js";
 import { performAction, KNOWN_ACTIONS } from "../js/core/actions.js";
 import {
@@ -39,6 +39,7 @@ const items = readJson("content/v1/items.json");
 const content = {
   balance: balancePkg.balance,
   winGate: balancePkg.winGate,
+  sacrificeGate: balancePkg.sacrificeGate,
   zones: zonesPkg.zones,
   travelLabels: zonesPkg.travelLabels,
   dialogue,
@@ -51,6 +52,7 @@ function ctx(rngSeed = 1) {
   return {
     balance: content.balance,
     winGate: content.winGate,
+    sacrificeGate: content.sacrificeGate,
     dialogue,
     encounters,
     items,
@@ -153,9 +155,49 @@ test("claim victory succeeds only with full checklist in chamber", () => {
     { faced_dragon: true, lattice_repaired: true },
     { player: { location: "elohim_chamber", health: 100 }, ai: { bond: 50 } }
   );
-  const burned = claimVictory(incomplete, content.winGate, content.balance);
+  const burned = claimVictory(incomplete, content.winGate, content.balance, content.sacrificeGate);
   assert.equal(burned.game.phase, PHASES.PLAYING);
   assert.ok(burned.player.health < 100);
+});
+
+test("ashen sacrifice ending opens gate and claims when AI burned", () => {
+  const ashen = stateWith(
+    ["dragon_tear", "lattice_shard"],
+    { faced_dragon: true, lattice_repaired: true, ai_sacrificed: true },
+    { player: { location: "elohim_chamber" }, ai: { bond: 0 } }
+  );
+  assert.equal(sacrificeGateMissing(ashen, content.sacrificeGate).length, 0);
+  assert.equal(isBossGateOpen(ashen, content.winGate, content.sacrificeGate), true);
+  assert.equal(isBossGateOpen(ashen, content.winGate), false);
+
+  const won = claimVictory(ashen, content.winGate, content.balance, content.sacrificeGate);
+  assert.equal(won.game.phase, PHASES.VICTORY);
+  assert.equal(won.game.ending, "sacrifice");
+
+  const withoutSacrifice = stateWith(
+    ["dragon_tear", "lattice_shard"],
+    { faced_dragon: true, lattice_repaired: true, ai_sacrificed: false },
+    { player: { location: "elohim_chamber", health: 100 }, ai: { bond: 0 } }
+  );
+  const seared = claimVictory(
+    withoutSacrifice,
+    content.winGate,
+    content.balance,
+    content.sacrificeGate
+  );
+  assert.equal(seared.game.phase, PHASES.PLAYING);
+  assert.ok(seared.player.health < 100);
+});
+
+test("covenant ending wins when both gates are open", () => {
+  const both = stateWith(
+    ["dragon_tear", "lattice_shard"],
+    { faced_dragon: true, lattice_repaired: true, ai_sacrificed: true },
+    { player: { location: "elohim_chamber" }, ai: { bond: 70 } }
+  );
+  const won = claimVictory(both, content.winGate, content.balance, content.sacrificeGate);
+  assert.equal(won.game.phase, PHASES.VICTORY);
+  assert.equal(won.game.ending, "covenant");
 });
 
 test("health or sanity zero ends the run on tick", () => {

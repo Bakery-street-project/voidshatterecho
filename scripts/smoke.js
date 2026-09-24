@@ -93,6 +93,9 @@ assert.equal(balance.saveKey, "voidshatterecho_save_v1");
 assert.ok(Array.isArray(balance.winGate.requireItems));
 assert.ok(balance.winGate.requireItems.includes("dragon_tear"));
 assert.ok(balance.winGate.requireItems.includes("lattice_shard"));
+assert.equal(typeof balance.sacrificeGate, "object", "missing sacrificeGate");
+assert.equal(balance.sacrificeGate.requireAiSacrificed, true, "sacrificeGate needs requireAiSacrificed");
+assert.ok(Array.isArray(balance.sacrificeGate.requireItems) && balance.sacrificeGate.requireItems.includes("dragon_tear"));
 
 const zones = JSON.parse(read("content/v1/zones.json")).zones;
 const requiredZones = [
@@ -155,6 +158,8 @@ assert.ok(renderSrc.includes("data-travel"), "missing travel hooks");
 assert.ok(renderSrc.includes("data-new-game"), "missing restart hooks");
 assert.ok(renderSrc.includes("renderInventory") || renderSrc.includes("Inventory"), "missing inventory UI");
 assert.ok(renderSrc.includes("bossGateMissing") || renderSrc.includes("Chamber checklist"), "missing checklist");
+assert.ok(renderSrc.includes("sacrificeGateMissing") || renderSrc.includes("ashen"), "missing ashen checklist path");
+assert.ok(renderSrc.includes("Ashen Covenant") || renderSrc.includes("ending === \"sacrifice\""), "missing ashen end screen");
 
 const saveSrc = read("js/core/save.js");
 assert.ok(saveSrc.includes("voidshatterecho_save_v1"), "missing save key");
